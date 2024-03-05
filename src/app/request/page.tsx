@@ -35,12 +35,6 @@ const StyledSelect = styled.select`
     border-color: #555;
   }
 `;
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin: 40px 0;
-`;
 
 const RequestPage = () => {
   const [option, setOption] = useState("");
@@ -56,7 +50,7 @@ const RequestPage = () => {
         <h2>정정 신청 페이지</h2>
         <form>
           <div>
-            <label htmlFor="reviewer">결제자</label>
+            <label htmlFor="reviewer">결재자</label>
             <StyledSelect id="reviewer" name="reviewer" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
@@ -79,10 +73,7 @@ const RequestPage = () => {
           <label htmlFor="memo">요청사항</label>
           <br />
           <Textarea text={text} setText={setText} />
-          <ButtonContainer>
-            <Button type="button">닫기</Button>
-            <Button type="submit">제출하기</Button>
-          </ButtonContainer>
+          <Button type="submit">제출하기</Button>
         </form>
       </StyledRequest>
     </div>
