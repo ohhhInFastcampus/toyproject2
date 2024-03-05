@@ -13,7 +13,7 @@ const StyledRequest = styled.div`
   margin: 20px;
   padding: 80px;
   gap: 60px;
-  border: 2px solid gray;
+  border: 1px solid #555;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
@@ -53,6 +53,8 @@ const RequestPage = () => {
           <div>
             <label htmlFor="reviewer">검토자</label>
             <StyledSelect id="reviewer" name="reviewer">
+              <option value="">선택해주세요</option>
+              <hr />
               <option value="manager">정지혜</option>
               <option value="CTO">helpdesku</option>
             </StyledSelect>
@@ -60,6 +62,8 @@ const RequestPage = () => {
           <div>
             <label htmlFor="reason">정정 사유</label>
             <StyledSelect id="reason" name="reason">
+              <option value="">선택해주세요</option>
+              <hr />
               <option value="overtime">업무 연장 미반영</option>
               <option value="unpaid_leave">무급 휴가 사용 미반영</option>
               <option value="holiday_work">휴일 근무 미반영</option>
