@@ -29,6 +29,9 @@ const Gnb = () => {
       <Link href="/pay" passHref>
         <StyledLink>급여내역</StyledLink>
       </Link>
+      <Link href="/request" passHref>
+        <StyledLink>정정 신청</StyledLink>
+      </Link>
     </>
   );
 };
@@ -41,6 +44,7 @@ const HeaderContainer = styled.div`
 `;
 
 const Header = () => {
+  //추후에 user data 삭제할 예정
   const user = {
     userId: "user1",
     name: "최홍주",
