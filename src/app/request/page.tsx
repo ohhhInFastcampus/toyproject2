@@ -1,16 +1,17 @@
 "use client";
 import Button from "@/components/Button";
+import { useState } from "react";
 import styled from "styled-components";
+import Textarea from "../../components/Textarea";
 
 const StyledRequest = styled.div`
   width: 50%;
-  height: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   margin: 20px;
+  padding: 80px;
   gap: 60px;
   border: 2px solid gray;
   border-radius: 10px;
@@ -34,7 +35,6 @@ const StyledSelect = styled.select`
     border-color: #555;
   }
 `;
-
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -43,6 +43,8 @@ const ButtonContainer = styled.div`
 `;
 
 const RequestPage = () => {
+  const [text, setText] = useState("요청 사항을 입력해주세요.");
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <StyledRequest>
@@ -56,13 +58,16 @@ const RequestPage = () => {
             </StyledSelect>
           </div>
           <div>
-            <label htmlFor="reason">정정사유</label>
+            <label htmlFor="reason">정정 사유</label>
             <StyledSelect id="reason" name="reason">
               <option value="overtime">업무 연장 미반영</option>
               <option value="unpaid_leave">무급 휴가 사용 미반영</option>
               <option value="holiday_work">휴일 근무 미반영</option>
             </StyledSelect>
           </div>
+          <label htmlFor="memo">요청사항</label>
+          <br />
+          <Textarea text={text} setText={setText} />
           <ButtonContainer>
             <Button type="button">닫기</Button>
             <Button type="submit">제출하기</Button>
