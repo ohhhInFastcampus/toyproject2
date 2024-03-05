@@ -29,6 +29,9 @@ const Gnb = () => {
       <Link href="/pay" passHref>
         <StyledLink>급여내역</StyledLink>
       </Link>
+      <Link href="/request" passHref>
+        <StyledLink>정정 신청</StyledLink>
+      </Link>
     </>
   );
 };
