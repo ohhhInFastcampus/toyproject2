@@ -41,6 +41,7 @@ const HeaderContainer = styled.div`
 `;
 
 const Header = () => {
+  //추후에 user data 삭제할 예정
   const user = {
     userId: "user1",
     name: "최홍주",
