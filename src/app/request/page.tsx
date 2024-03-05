@@ -43,7 +43,12 @@ const ButtonContainer = styled.div`
 `;
 
 const RequestPage = () => {
+  const [option, setOption] = useState("");
   const [text, setText] = useState("요청 사항을 입력해주세요.");
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOption(e.target.value);
+  };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -52,21 +57,23 @@ const RequestPage = () => {
         <form>
           <div>
             <label htmlFor="reviewer">검토자</label>
-            <StyledSelect id="reviewer" name="reviewer">
+            <StyledSelect id="reviewer" name="reviewer" onChange={handleChange}>
               <option value="">선택해주세요</option>
-              <hr />
-              <option value="manager">정지혜</option>
-              <option value="CTO">helpdesku</option>
+              <optgroup>
+                <option value="manager">정지혜</option>
+                <option value="CTO">helpdesku</option>
+              </optgroup>
             </StyledSelect>
           </div>
           <div>
             <label htmlFor="reason">정정 사유</label>
-            <StyledSelect id="reason" name="reason">
+            <StyledSelect id="reason" name="reason" onChange={handleChange}>
               <option value="">선택해주세요</option>
-              <hr />
-              <option value="overtime">업무 연장 미반영</option>
-              <option value="unpaid_leave">무급 휴가 사용 미반영</option>
-              <option value="holiday_work">휴일 근무 미반영</option>
+              <optgroup>
+                <option value="overtime">업무 연장 미반영</option>
+                <option value="unpaid_leave">무급 휴가 사용 미반영</option>
+                <option value="holiday_work">휴일 근무 미반영</option>
+              </optgroup>
             </StyledSelect>
           </div>
           <label htmlFor="memo">요청사항</label>
