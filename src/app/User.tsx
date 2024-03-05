@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import styled from "styled-components";
+import { UserType } from "../../type/UserType";
 
 const UserContainer = styled.div`
   display: flex;
@@ -17,11 +18,11 @@ const UserName = styled.div`
   font-size: 15px;
 `;
 
-const User = () => {
+const User = ({ name, profile }: UserType) => {
   return (
     <UserContainer>
-      <Image src="/next.svg" alt="profile picture" width={70} height={70} />
-      <UserName>최홍주</UserName>
+      <Image src={profile} alt="profile picture" width={70} height={70} />
+      <UserName>{name}</UserName>
     </UserContainer>
   );
 };

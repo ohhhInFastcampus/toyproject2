@@ -39,12 +39,19 @@ const HeaderContainer = styled.div`
   align-items: center;
   width: 100%;
 `;
+
 const Header = () => {
+  const user = {
+    userId: "user1",
+    name: "최홍주",
+    profile: "/next.svg",
+  };
+
   return (
     <HeaderContainer>
       <Image src="/next.svg" alt="profile picture" width={100} height={100} />
       <Gnb />
-      <User />
+      <User {...user} />
     </HeaderContainer>
   );
 };
