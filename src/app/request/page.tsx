@@ -53,10 +53,10 @@ const RequestPage = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <StyledRequest>
-        <h2>정정신청 페이지</h2>
+        <h2>정정 신청 페이지</h2>
         <form>
           <div>
-            <label htmlFor="reviewer">검토자</label>
+            <label htmlFor="reviewer">결제자</label>
             <StyledSelect id="reviewer" name="reviewer" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
