@@ -5,11 +5,30 @@ import User from "./User";
 import styled from "styled-components";
 import Link from "next/link";
 
+const StyledLink = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 15px;
+
+  &:hover {
+    background-color: #f0f0f0;
+    height: 40px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+`;
 const Gnb = () => {
   return (
     <>
-      <Link href="/">HOME</Link>
-      <Link href="/pay">급여내역</Link>
+      <Link href="/" passHref>
+        <StyledLink>HOME</StyledLink>
+      </Link>
+      <Link href="/pay" passHref>
+        <StyledLink>급여내역</StyledLink>
+      </Link>
     </>
   );
 };
