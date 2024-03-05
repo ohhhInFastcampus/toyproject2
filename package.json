@@ -11,6 +11,7 @@
   "dependencies": {
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
+    "axios": "^1.6.7",
     "firebase": "^10.8.1",
     "next": "14.1.1",
     "react": "^18",
