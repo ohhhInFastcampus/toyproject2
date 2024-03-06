@@ -1,19 +1,22 @@
-"use client"
-import React, { Fragment, useEffect, useState } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { Draggable, DropArg } from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import styled from 'styled-components';
-import EventModal from './AddEventModal'
-import { Props } from './AddEventModal';
+"use client";
+import React, { Fragment, useEffect, useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin, {
+  Draggable,
+  DropArg,
+} from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import styled from "styled-components";
+import EventModal from "./AddEventModal";
+import { Props } from "./AddEventModal";
 
 interface ScheduleType {
   userId: string;
   id: string;
   title: string;
-  startDate: string;
-  endDate: string;
+  start: string;
+  end: string;
   content: string;
   participant: string;
 }
@@ -28,63 +31,71 @@ const Calendar = () => {
   const [events, setEvents] = useState<ScheduleType[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newEvent, setNewEvent] = useState<ScheduleType>({
-    userId: '',
-    id: '',
-    title: '',
-    startDate: '',
-    endDate: '',
-    content: '',
-    participant: ''
+    userId: "",
+    id: "",
+    title: "",
+    start: "",
+    end: "",
+    content: "",
+    participant: "",
   });
 
-  function handleDateClick(arg: { date: Date}) {
-    setNewEvent({ ...newEvent, id: `${new Date().getTime()}` });
+  function handleDateClick(arg: { date: Date }) {
+    const newEvent: ScheduleType = {
+      userId: "",
+      id: "",
+      title: "",
+      start: "",
+      end: "",
+      content: "",
+      participant: "",
+    };
+    setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowModal(true);
   }
 
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
       ...newEvent,
-      startDate: data.date.toISOString(),
-      endDate: data.date.toISOString(),
+      start: data.date.toISOString(),
+      end: data.date.toISOString(),
       title: data.draggedEl.title,
-      id: `${new Date().getTime()}`
+      id: `${new Date().getTime()}`,
     };
     setEvents([...events, event]);
     setShowModal(false);
     setNewEvent({
-      userId: '',
-      id: '',
-      title: '',
-      startDate: '',
-      endDate: '',
-      content: '',
-      participant: ''
+      userId: "",
+      id: "",
+      title: "",
+      start: "",
+      end: "",
+      content: "",
+      participant: "",
     });
   }
 
   function handleCloseModal() {
     setShowModal(false);
     setNewEvent({
-      userId: '',
-      id: '',
-      title: '',
-      startDate: '',
-      endDate: '',
-      content: '',
-      participant: ''
+      userId: "",
+      id: "",
+      title: "",
+      start: "",
+      end: "",
+      content: "",
+      participant: "",
     });
   }
-
 
   function handleFormSubmit(formData: ScheduleType) {
     const event: ScheduleType = {
       ...formData,
-      id: `${new Date().getTime()}`
+      id: `${new Date().getTime()}`,
     };
-    setEvents(prevEvents => [...prevEvents, event]);
-    setShowModal(false); 
-    console.log(formData)
+    setEvents((prevEvents) => [...prevEvents, event]);
+    setShowModal(false);
+    console.log(formData);
   }
 
   return (
@@ -93,9 +104,9 @@ const Calendar = () => {
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
           headerToolbar={{
-            left: 'prev,next today',
-            center: 'title',
-            right: 'resourceTimelineWeek, dayGridMonth, timeGridWeek'
+            left: "prev,next today",
+            center: "title",
+            right: "resourceTimelineWeek, dayGridMonth, timeGridWeek",
           }}
           events={events}
           nowIndicator={true}
@@ -111,12 +122,12 @@ const Calendar = () => {
             onClose={handleCloseModal}
             onSubmit={handleFormSubmit}
             newEvent={newEvent}
-            isOpen={showModal}        
+            isOpen={showModal}
           />
         )}
       </CalendarContainer>
     </>
   );
-}
+};
 
 export default Calendar;

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { ScheduleType } from '../../../type/Schedule';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { ScheduleType } from "../../../type/Schedule";
+import styled from "styled-components";
 
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType
+  newEvent: ScheduleType;
 }
 
 const ModalWrapper = styled.div`
@@ -68,29 +68,36 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
+const EventModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  newEvent,
+}) => {
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: '',
-    id: '',
-    title: '',
-    startDate: '',
-    endDate: '',
-    content: '',
-    participant: ''
+    userId: "",
+    id: "",
+    title: "",
+    start: "",
+    end: "",
+    content: "",
+    participant: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(formData);
-    onClose(); 
+    onClose();
   };
 
   return (
@@ -101,15 +108,39 @@ const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) =>
             <CloseButton onClick={onClose}>&times;</CloseButton>
             <Form onSubmit={handleSubmit}>
               <Label>Title:</Label>
-              <Input type="text" name="title" value={formData.title} onChange={handleChange} />
+              <Input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
               <Label>Start Date:</Label>
-              <Input type="date" name="startDate" value={formData.startDate} onChange={handleChange} />
+              <Input
+                type="date"
+                name="start"
+                value={formData.start}
+                onChange={handleChange}
+              />
               <Label>End Date:</Label>
-              <Input type="date" name="endDate" value={formData.endDate} onChange={handleChange} />
+              <Input
+                type="date"
+                name="end"
+                value={formData.end}
+                onChange={handleChange}
+              />
               <Label>Content:</Label>
-              <TextArea name="content" value={formData.content} onChange={handleChange} />
+              <TextArea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+              />
               <Label>Participant:</Label>
-              <Input type="text" name="participant" value={formData.participant} onChange={handleChange} />
+              <Input
+                type="text"
+                name="participant"
+                value={formData.participant}
+                onChange={handleChange}
+              />
               <SubmitButton type="submit">Submit</SubmitButton>
             </Form>
           </ModalContent>
