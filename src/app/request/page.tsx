@@ -42,16 +42,15 @@ const RequestPage = () => {
   const [reason, setReason] = useState("");
   const [text, setText] = useState("");
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMonth(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.name === "month") {
+      setMonth(e.target.value);
+    } else if (e.target.name === "approver") {
+      setApprover(e.target.value);
+    } else if (e.target.name === "reason") {
+      setReason(e.target.value);
+    }
   };
-  const handleApproverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setApprover(e.target.value);
-  };
-  const handleReasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setReason(e.target.value);
-  };
-
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -66,7 +65,7 @@ const RequestPage = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="month">급여 내역</label>
-            <StyledSelect id="month" name="month" onChange={handleMonthChange}>
+            <StyledSelect id="month" name="month" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="jan">1월</option>
@@ -86,11 +85,7 @@ const RequestPage = () => {
           </div>
           <div>
             <label htmlFor="approver">결재자</label>
-            <StyledSelect
-              id="approver"
-              name="approver"
-              onChange={handleApproverChange}
-            >
+            <StyledSelect id="approver" name="approver" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="manager">정지혜</option>
@@ -100,11 +95,7 @@ const RequestPage = () => {
           </div>
           <div>
             <label htmlFor="reason">정정 사유</label>
-            <StyledSelect
-              id="reason"
-              name="reason"
-              onChange={handleReasonChange}
-            >
+            <StyledSelect id="reason" name="reason" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="overtime">업무 연장 미반영</option>
