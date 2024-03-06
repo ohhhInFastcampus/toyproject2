@@ -37,19 +37,26 @@ const StyledSelect = styled.select`
 `;
 
 const RequestPage = () => {
+  const [month, setMonth] = useState("");
   const [approver, setApprover] = useState("");
   const [reason, setReason] = useState("");
   const [text, setText] = useState("");
 
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMonth(e.target.value);
+  };
   const handleApproverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setApprover(e.target.value);
   };
   const handleReasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setReason(e.target.value);
   };
+
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log({ approver, reason, text });
+
+    //TODO console.log 지우고 서버로 보내는 방식으로 처리
+    console.log({ month, approver, reason, text });
   };
 
   return (
@@ -57,6 +64,26 @@ const RequestPage = () => {
       <StyledRequest>
         <h2>정정 신청 페이지</h2>
         <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="month">급여 내역</label>
+            <StyledSelect id="month" name="month" onChange={handleMonthChange}>
+              <option value="">선택해주세요</option>
+              <optgroup>
+                <option value="jan">1월</option>
+                <option value="feb">2월</option>
+                <option value="mar">3월</option>
+                <option value="apr">4월</option>
+                <option value="may">5월</option>
+                <option value="jun">6월</option>
+                <option value="jul">7월</option>
+                <option value="aug">8월</option>
+                <option value="sep">9월</option>
+                <option value="oct">10월</option>
+                <option value="nov">11월</option>
+                <option value="dec">12월</option>
+              </optgroup>
+            </StyledSelect>
+          </div>
           <div>
             <label htmlFor="approver">결재자</label>
             <StyledSelect
