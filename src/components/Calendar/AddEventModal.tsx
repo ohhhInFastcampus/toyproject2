@@ -1,98 +1,69 @@
-import React, { useState } from 'react';
-import { ScheduleType } from '../../../type/Schedule';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { ScheduleType } from "../../../type/Schedule";
+import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors } from "./EventModalStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faArrowRight, faUser, faCalendarAlt, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType
+  newEvent: ScheduleType;
 }
 
-const ModalWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-`;
-
-const ModalContent = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  position: relative; /* Ensure close button is positioned relative to the modal content */
-`;
-
-const CloseButton = styled.span`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const TextArea = styled.textarea`
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const SubmitButton = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
+const EventModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  newEvent,
+}) => {
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: '',
-    id: '',
-    title: '',
-    startDate: '',
-    endDate: '',
-    content: '',
-    participant: ''
+    userId: "",
+    id: "",
+    title: "",
+    start: "",
+    end: "",
+    content: "",
+    participant: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose(); 
-  };
+    
+    // Generate a random color in hexadecimal format
+    const randomIndex = Math.floor(Math.random() * eventColors.length);
+    const randomColor = eventColors[randomIndex];
+    const start = new Date(formData.start);
+    const end = new Date(formData.end);
+  
 
+    // Update the formData with the random backgroundColor and adjusted end date
+    const updatedFormData = {
+      ...formData,
+      backgroundColor: randomColor,
+      start: start.toISOString(),
+      end: end.toISOString(),
+      textColor: 'black',
+      borderColor: '#DEDEDE'
+    };
+    
+    onSubmit(updatedFormData);
+    onClose();
+    console.log(formData)
+  };
+  
+  
+  
   return (
     <>
       {isOpen && (
@@ -100,17 +71,66 @@ const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) =>
           <ModalContent>
             <CloseButton onClick={onClose}>&times;</CloseButton>
             <Form onSubmit={handleSubmit}>
-              <Label>Title:</Label>
-              <Input type="text" name="title" value={formData.title} onChange={handleChange} />
-              <Label>Start Date:</Label>
-              <Input type="date" name="startDate" value={formData.startDate} onChange={handleChange} />
-              <Label>End Date:</Label>
-              <Input type="date" name="endDate" value={formData.endDate} onChange={handleChange} />
-              <Label>Content:</Label>
-              <TextArea name="content" value={formData.content} onChange={handleChange} />
-              <Label>Participant:</Label>
-              <Input type="text" name="participant" value={formData.participant} onChange={handleChange} />
-              <SubmitButton type="submit">Submit</SubmitButton>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faCalendarCheck} />
+                </IconWrapper>
+                <TitleInput
+                  type="text"
+                  name="title"
+                  placeholder="일정 추가하기"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faClock} />
+                </IconWrapper>
+                <InputWrapper>
+                  <DateInput
+                    type="date"
+                    name="start"
+                    value={formData.start}
+                    onChange={handleChange}
+                  />
+                </InputWrapper>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </IconWrapper>
+                <InputWrapper>
+                  <DateInput
+                    type="date"
+                    name="end"
+                    value={formData.end}
+                    onChange={handleChange}
+                  />
+                </InputWrapper>
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faUsers} />
+                </IconWrapper>
+                <Input
+                  type="text"
+                  name="participant"
+                  placeholder="참여자 추가하기"
+                  value={formData.participant}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faNoteSticky} />
+                </IconWrapper>
+                <TextArea
+                  name="content"
+                  placeholder="메모 추가하기"
+                  value={formData.content}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <SubmitButton type="submit">저장</SubmitButton>
             </Form>
           </ModalContent>
         </ModalWrapper>
