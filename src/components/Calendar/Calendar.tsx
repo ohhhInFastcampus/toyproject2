@@ -6,7 +6,6 @@ import interactionPlugin, {Draggable, DropArg,} from "@fullcalendar/interaction"
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { CalendarContainer } from "./CalendarStyles"; 
 import EventModal from "./AddEventModal";
-import { Props } from "./AddEventModal";
 import { ScheduleType } from "../../../type/Schedule";
 
 const Calendar = () => {
@@ -70,34 +69,21 @@ const Calendar = () => {
     });
   }
 
-  // function handleFormSubmit(formData: ScheduleType) {
-  //   const event: ScheduleType = {
-  //     ...formData,
-  //     id: `${new Date().getTime()}`,
-  //   };
-  //   setEvents((prevEvents) => [...prevEvents, event]);
-  //   setShowModal(false);
-  //   console.log(formData);
-  // }
-
   function handleFormSubmit(formData: ScheduleType) {
     const start = new Date(formData.start);
     const end = new Date(formData.end);
   
-    // Create a new event object with the submitted form data
     const event: ScheduleType = {
       ...formData,
       id: `${new Date().getTime()}`,
       start: start.toISOString(),
       end: end.toISOString(),
     };
-  
-    // Update the events state with the new event
+
     setEvents((prevEvents) => [...prevEvents, event]);
     setShowModal(false);
   }
 
-  
   return (
     <>
       <CalendarContainer>

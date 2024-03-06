@@ -6,4 +6,5 @@ export interface ScheduleType {
     end: string,
     content: string,
     participant: string,
+    backgroundColor: string
 }

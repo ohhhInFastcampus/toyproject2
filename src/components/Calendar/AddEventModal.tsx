@@ -4,28 +4,24 @@ import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 
-export interface Props {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
   newEvent: ScheduleType;
 }
 
-const EventModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  newEvent,
-}) => {
-  const [formData, setFormData] = useState<ScheduleType>({
-    userId: "",
-    id: "",
-    title: "",
-    start: "",
-    end: "",
-    content: "",
-    participant: "",
-  });
+  const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
+    const [formData, setFormData] = useState<ScheduleType>({
+      userId: "",
+      id: "",
+      title: "",
+      start: "",
+      end: "",
+      content: "",
+      participant: "",
+      backgroundColor: ""
+    });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,14 +36,12 @@ const EventModal: React.FC<Props> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Generate a random color in hexadecimal format
+    // 이벤트 색상 랜덤 선택
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
     const end = new Date(formData.end);
   
-
-    // Update the formData with the random backgroundColor and adjusted end date
     const updatedFormData = {
       ...formData,
       backgroundColor: randomColor,
