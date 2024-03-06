@@ -37,21 +37,33 @@ const StyledSelect = styled.select`
 `;
 
 const RequestPage = () => {
-  const [option, setOption] = useState("");
-  const [text, setText] = useState("요청 사항을 입력해주세요.");
+  const [approver, setApprover] = useState("");
+  const [reason, setReason] = useState("");
+  const [text, setText] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setOption(e.target.value);
+  const handleApproverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setApprover(e.target.value);
+  };
+  const handleReasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setReason(e.target.value);
+  };
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    console.log({ approver, reason, text });
   };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <StyledRequest>
         <h2>정정 신청 페이지</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="reviewer">결재자</label>
-            <StyledSelect id="reviewer" name="reviewer" onChange={handleChange}>
+            <label htmlFor="approver">결재자</label>
+            <StyledSelect
+              id="approver"
+              name="approver"
+              onChange={handleApproverChange}
+            >
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="manager">정지혜</option>
@@ -61,7 +73,11 @@ const RequestPage = () => {
           </div>
           <div>
             <label htmlFor="reason">정정 사유</label>
-            <StyledSelect id="reason" name="reason" onChange={handleChange}>
+            <StyledSelect
+              id="reason"
+              name="reason"
+              onChange={handleReasonChange}
+            >
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="overtime">업무 연장 미반영</option>
@@ -72,7 +88,11 @@ const RequestPage = () => {
           </div>
           <label htmlFor="memo">요청사항</label>
           <br />
-          <Textarea text={text} setText={setText} />
+          <Textarea
+            name="text"
+            setText={setText}
+            placeholder="요청 사항을 입력해주세요."
+          />
           <Button type="submit">제출하기</Button>
         </form>
       </StyledRequest>

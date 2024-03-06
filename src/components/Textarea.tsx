@@ -10,17 +10,23 @@ const StyledTextarea = styled.textarea`
 `;
 
 interface TextareaType {
-  text: string;
+  name: string;
+  placeholder: string;
   setText: (value: string) => void;
 }
 
-const Textarea = ({ text, setText }: TextareaType) => {
+const Textarea = ({ setText, placeholder }: TextareaType) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
   return (
-    <StyledTextarea cols={30} rows={10} value={text} onChange={handleChange} />
+    <StyledTextarea
+      cols={30}
+      rows={10}
+      placeholder={placeholder}
+      onChange={handleChange}
+    />
   );
 };
 
