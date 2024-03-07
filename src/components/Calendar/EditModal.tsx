@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment'; 
 import { ScheduleType } from '../../../type/Schedule';
-import { ModalWrapper, ModalContent, CloseButton, Form, Text, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, Title } from "./EventModalStyles";
+import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, Input, Text, TextArea, SubmitButton, Title } from "./EventModalStyles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarCheck, faChevronRight, faClock, faEdit, faNoteSticky, faUsers } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,14 +13,12 @@ interface EditModalProps {
 }
 
 const EditModal = ({ isOpen, event, onClose, onSubmit }: EditModalProps) => {
-
   const [formData, setFormData] = useState<ScheduleType>(event);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     setFormData(event); 
   }, [event]);
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -38,6 +36,7 @@ const EditModal = ({ isOpen, event, onClose, onSubmit }: EditModalProps) => {
 
   const handleEdit = () => {
     setEditMode(true);
+    console.log(formData)
   };
 
   if (!event) {
@@ -55,43 +54,55 @@ const EditModal = ({ isOpen, event, onClose, onSubmit }: EditModalProps) => {
                 <IconWrapper>
                   <FontAwesomeIcon icon={faCalendarCheck} />
                 </IconWrapper>
-                <Title>{event.title}</Title>
+                <Title>
+                  {editMode ? (
+                    <Input type="text" name="title" value={formData.title} onChange={handleChange} />
+                  ) : (
+                    event.title
+                  )}
+                </Title>
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
                   <FontAwesomeIcon icon={faClock} />
                 </IconWrapper>
-                <InputWrapper>
-                  <Text>{moment(event.start).format('ddd MMM DD ')}</Text>
-                </InputWrapper>
+                <Text>{moment(event.start).format('ddd MMM DD ')}</Text>
                 <IconWrapper>
                   <FontAwesomeIcon icon={faChevronRight} />
                 </IconWrapper>
-                <InputWrapper>
-                  <Text>{moment(event.end).format('ddd MMM DD ')}</Text>
-                </InputWrapper>
+                <Text>{moment(event.end).format('ddd MMM DD ')}</Text>
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
                   <FontAwesomeIcon icon={faUsers} />
                 </IconWrapper>
-                <Text>{event.participant}</Text>
+                <Input
+                  type="text"
+                  name="participant"
+                  value={formData.participant}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                />
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
                   <FontAwesomeIcon icon={faNoteSticky} />
                 </IconWrapper>
-                <Text>{event.content}</Text>
+                <TextArea
+                  name="content"
+                  value={formData.content}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                />
               </FormGroup>
-              {/* <SubmitButton type="submit">수정</SubmitButton> */}
               {editMode ? (
-              <SubmitButton onClick={handleSubmit}>Save Changes</SubmitButton>
-            ) : (
-              <SubmitButton onClick={handleEdit}>
-                <FontAwesomeIcon icon={faEdit} />
-                Edit
-              </SubmitButton>
-            )}
+                <SubmitButton type="submit">Save Changes</SubmitButton>
+              ) : (
+                <SubmitButton type="button" onClick={handleEdit}>
+                  <FontAwesomeIcon icon={faEdit} />
+                  Edit
+                </SubmitButton>
+              )}
             </Form>
           </ModalContent>
         </ModalWrapper>

@@ -11,17 +11,21 @@ interface Props {
   newEvent: ScheduleType;
 }
 
-  const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
-    const [formData, setFormData] = useState<ScheduleType>({
-      userId: "",
-      id: "",
-      title: "",
-      start: "",
-      end: "",
-      content: "",
-      participant: "",
-      backgroundColor: ""
-    });
+const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
+  const [formData, setFormData] = useState<ScheduleType>({
+    userId: "",
+    id: "",
+    title: "",
+    start: "",
+    end: "",
+    content: "",
+    participant: "",
+    backgroundColor: ""
+  });
+
+  // useEffect(() => {
+  //   setFormData(newEvent); 
+  // }, [newEvent]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
