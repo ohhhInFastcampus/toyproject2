@@ -19,7 +19,7 @@ export const ModalContent = styled.div`
   border-radius: 8px;
   width: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: relative; /* Ensure close button is positioned relative to the modal content */
+  position: relative;
 `;
 
 export const CloseButton = styled.span`
@@ -36,6 +36,7 @@ export const Form = styled.form`
   flex-direction: column;
   margin-top: 10px;
 `;
+
 export const FormGroup = styled.div`
   display: flex;
   align-items: center;
@@ -45,61 +46,43 @@ export const FormGroup = styled.div`
 export const IconWrapper = styled.div`
   width: 30px;
   text-align: center;
-  margin-right: 10px; /* Adjust margin-right to create space between icon and input */
+  margin-right: 10px;
 `;
 
 export const InputWrapper = styled.div`
   flex: 1;
-  margin-right: 10px; /* Adjust margin-right to create space between icon and input */
+  margin-right: 10px;
 `;
 
-export const TitleInput = styled.input`
-padding: 10px 8px;
-border: none;
-border-bottom: 1px solid #ddd;
-border-radius: 0;
-transition: border-color 0.3s;
-font-size: 22px;
-width: 100%; 
-margin-left: 15px;
-margin-right: 15px;
-&:focus {
-  outline: none;
-  border-bottom: 1px solid #333;
-}
-`;
-
-export const Input = styled.input`
-padding: 10px 8px;
-border: none;
-border-bottom: 1px solid #ddd;
-border-radius: 0;
-transition: border-color 0.3s;
-font-size: 13px;
-width: 100%; 
-margin-left: 15px;
-margin-right: 15px;
-&:focus {
-  outline: none;
-  border-bottom: 1px solid #333;
-}
-`;
-
-export const DateInput = styled.input`
+const commonInputStyles = `
   padding: 10px 8px;
   border: none;
   border-bottom: 1px solid #ddd;
   border-radius: 0;
   transition: border-color 0.3s;
-  font-size: 13px;
-  width: 125px; /* Adjust width to make it smaller */
-  margin-left: 15px ;
+  width: 100%; 
+  margin-left: 15px;
+  margin-right: 15px;
   &:focus {
     outline: none;
     border-bottom: 1px solid #333;
   }
 `;
 
+export const TitleInput = styled.input`
+  ${commonInputStyles}
+  font-size: 22px;
+`;
+
+export const Input = styled.input`
+  ${commonInputStyles}
+  font-size: 13px;
+`;
+
+export const DateInput = styled.input`
+  ${commonInputStyles}
+  width: 125px;
+`;
 
 export const TextArea = styled.textarea`
   padding: 10px 8px;
@@ -115,11 +98,11 @@ export const TextArea = styled.textarea`
   }
 `;
 
-export const SubmitButton = styled.button`
+const commonButtonStyles = `
   padding: 10px 0;
-  background-color: #f0f0f0; /* Light background color */
-  color: #333; /* Text color */
-  border: 1px solid #ccc; /* Border color */
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -131,12 +114,24 @@ export const SubmitButton = styled.button`
   &:hover {
     background-color: #e0e0e0; 
   }
-
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1); /* Add subtle focus outline */
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   }
 `;
+
+export const SubmitButton = styled.button`
+  ${commonButtonStyles}
+`;
+
+export const EditButton = styled.button`
+  ${commonButtonStyles}
+`;
+
+export const DeleteButton = styled.button`
+  ${commonButtonStyles}
+`;
+
 export const eventColors = [
   '#FFADAD', 
   '#FFD6A5', 
@@ -152,33 +147,26 @@ export const Label = styled.label`
   display: block;
 `;
 
-export const Textarea = styled.textarea`
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  resize: vertical;
-`;
 export const Text = styled.span`
-padding: 10px 8px;
-transition: border-color 0.3s;
-font-size: 14px;
-width: 100%; 
-margin-left: 15px;
-margin-right: 15px;
-&:focus {
-  outline: none;
-  border-bottom: 1px solid #333;
-}
+  padding: 10px 8px;
+  transition: border-color 0.3s;
+  font-size: 14px;
+  width: 100%; 
+  margin-left: 15px;
+  margin-right: 15px;
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid #333;
+  }
 `;
+
 export const Title = styled.h2`
-padding: 10px 8px;
-font-size: 22px;
-width: 100%; 
-margin-left: 15px;
-margin-right: 15px;
-&:hover {
-  color: #333
-}
+  padding: 10px 8px;
+  font-size: 22px;
+  width: 100%; 
+  margin-left: 15px;
+  margin-right: 15px;
+  &:hover {
+    color: #333
+  }
 `;
