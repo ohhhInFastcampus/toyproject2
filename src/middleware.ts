@@ -1,14 +1,17 @@
+import { onAuthStateChanged } from "firebase/auth";
 import { NextResponse, NextRequest } from "next/server";
+import { auth } from "./firebase";
+import { useSelector } from "react-redux";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log("middleware");
 
   // 로그인 상태 확인, 쿠키 사용
-  const isLoggedIn = request.cookies.get("token");
+  let isLoggedIn = request.cookies.get("token")?.value;
+
   console.log("isLoggedIn", isLoggedIn);
   console.log("pathname", pathname);
-
   // 로그인 페이지 접근 시 로그인 상태에 따라 처리
   if (pathname === "/login") {
     if (isLoggedIn) {
