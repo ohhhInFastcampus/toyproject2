@@ -1,5 +1,6 @@
 "use client";
 import React, { Fragment, useEffect, useState } from "react";
+import moment from 'moment';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, {Draggable, DropArg,} from "@fullcalendar/interaction";
@@ -29,7 +30,7 @@ const Calendar = () => {
       id: "",
       title: "",
       start: "",
-      end: "",
+      end: "", 
       content: "",
       participant: "",
     };
@@ -40,8 +41,8 @@ const Calendar = () => {
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
       ...newEvent,
-      start: data.date.toISOString(),
-      end: data.date.toISOString(),
+      start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"), 
+      end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
       id: `${new Date().getTime()}`,
     };
@@ -61,6 +62,7 @@ const Calendar = () => {
   function handleEditModal(data: { event: ScheduleType }) {
     setNewEvent(data.event); // Set the event data to be edited
     setShowEditModal(true); // Open the EditModal
+    console.log(data)
   }
   
 
@@ -78,8 +80,8 @@ const Calendar = () => {
   }
 
   function handleFormSubmit(formData: ScheduleType) {
-    const start = new Date(formData.start);
-    const end = new Date(formData.end);
+    const start = moment(formData.start).toDate(); // Convert Moment.js object to Date object
+    const end = moment(formData.end).toDate();
   
     const event: ScheduleType = {
       ...formData,
@@ -126,8 +128,7 @@ const Calendar = () => {
             event={newEvent}
             onClose={() => setShowEditModal(false)}
             onSubmit={(formData: ScheduleType) => {
-              // Handle editing the event data
-              // You can update the event data in the events array or any other state management approach you are using
+             
               setShowEditModal(false);
             }}           
           />

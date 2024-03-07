@@ -107,7 +107,7 @@ interface Props {
                   type="text"
                   name="participant"
                   placeholder="참여자 추가하기"
-                  value={formData.participant}
+                  value={formData.participant || ''}
                   onChange={handleChange}
                 />
               </FormGroup>
@@ -118,7 +118,7 @@ interface Props {
                 <TextArea
                   name="content"
                   placeholder="메모 추가하기"
-                  value={formData.content}
+                  value={formData.content || ''}
                   onChange={handleChange}
                 />
               </FormGroup>

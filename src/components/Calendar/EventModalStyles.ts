@@ -43,14 +43,14 @@ export const FormGroup = styled.div`
 `;
 
 export const IconWrapper = styled.div`
-  width: 30px; /* Adjust width as needed */
+  width: 30px;
   text-align: center;
+  margin-right: 10px; /* Adjust margin-right to create space between icon and input */
 `;
 
 export const InputWrapper = styled.div`
   flex: 1;
-  // margin-left: 20px;
-  margin-right: 15px;
+  margin-right: 10px; /* Adjust margin-right to create space between icon and input */
 `;
 
 export const TitleInput = styled.input`
@@ -159,4 +159,26 @@ export const Textarea = styled.textarea`
   border: 1px solid #ccc;
   margin-bottom: 10px;
   resize: vertical;
+`;
+export const Text = styled.span`
+padding: 10px 8px;
+transition: border-color 0.3s;
+font-size: 14px;
+width: 100%; 
+margin-left: 15px;
+margin-right: 15px;
+&:focus {
+  outline: none;
+  border-bottom: 1px solid #333;
+}
+`;
+export const Title = styled.h2`
+padding: 10px 8px;
+font-size: 22px;
+width: 100%; 
+margin-left: 15px;
+margin-right: 15px;
+&:hover {
+  color: #333
+}
 `;
