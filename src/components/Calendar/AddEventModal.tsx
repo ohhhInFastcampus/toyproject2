@@ -1,27 +1,33 @@
 import React, { useState } from "react";
 import { ScheduleType } from "../../../type/Schedule";
+<<<<<<< HEAD
 import styled from "styled-components";
+=======
+import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors } from "./EventModalStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+>>>>>>> 36deb3c5f84ec9ffc55585c28bb42b8954d8e3a4
 
-export interface Props {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
   newEvent: ScheduleType;
 }
 
-const ModalWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-`;
+  const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
+    const [formData, setFormData] = useState<ScheduleType>({
+      userId: "",
+      id: "",
+      title: "",
+      start: "",
+      end: "",
+      content: "",
+      participant: "",
+      backgroundColor: ""
+    });
 
+<<<<<<< HEAD
 const ModalContent = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -84,6 +90,8 @@ const EventModal: React.FC<Props> = ({
     participant: "",
   });
 
+=======
+>>>>>>> 36deb3c5f84ec9ffc55585c28bb42b8954d8e3a4
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -96,10 +104,32 @@ const EventModal: React.FC<Props> = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+<<<<<<< HEAD
     onSubmit(formData);
     onClose();
+=======
+    
+    // 이벤트 색상 랜덤 선택
+    const randomIndex = Math.floor(Math.random() * eventColors.length);
+    const randomColor = eventColors[randomIndex];
+    const start = new Date(formData.start);
+    const end = new Date(formData.end);
+  
+    const updatedFormData = {
+      ...formData,
+      backgroundColor: randomColor,
+      start: start.toISOString(),
+      end: end.toISOString(),
+      textColor: 'black',
+      borderColor: '#DEDEDE'
+    };
+    setFormData(updatedFormData);
+    onSubmit(updatedFormData);
+    onClose();
+    console.log(formData)
+>>>>>>> 36deb3c5f84ec9ffc55585c28bb42b8954d8e3a4
   };
-
+  
   return (
     <>
       {isOpen && (
@@ -107,6 +137,7 @@ const EventModal: React.FC<Props> = ({
           <ModalContent>
             <CloseButton onClick={onClose}>&times;</CloseButton>
             <Form onSubmit={handleSubmit}>
+<<<<<<< HEAD
               <Label>Title:</Label>
               <Input
                 type="text"
@@ -142,6 +173,68 @@ const EventModal: React.FC<Props> = ({
                 onChange={handleChange}
               />
               <SubmitButton type="submit">Submit</SubmitButton>
+=======
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faCalendarCheck} />
+                </IconWrapper>
+                <TitleInput
+                  type="text"
+                  name="title"
+                  placeholder="일정 추가하기"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faClock} />
+                </IconWrapper>
+                <InputWrapper>
+                  <DateInput
+                    type="date"
+                    name="start"
+                    value={formData.start}
+                    onChange={handleChange}
+                  />
+                </InputWrapper>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </IconWrapper>
+                <InputWrapper>
+                  <DateInput
+                    type="date"
+                    name="end"
+                    value={formData.end}
+                    onChange={handleChange}
+                  />
+                </InputWrapper>
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faUsers} />
+                </IconWrapper>
+                <Input
+                  type="text"
+                  name="participant"
+                  placeholder="참여자 추가하기"
+                  value={formData.participant || ''}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faNoteSticky} />
+                </IconWrapper>
+                <TextArea
+                  name="content"
+                  placeholder="메모 추가하기"
+                  value={formData.content || ''}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <SubmitButton type="submit">저장</SubmitButton>
+>>>>>>> 36deb3c5f84ec9ffc55585c28bb42b8954d8e3a4
             </Form>
           </ModalContent>
         </ModalWrapper>
