@@ -39,22 +39,22 @@ const LoginPage = () => {
       setError("이메일 또는 아이디를 입력해주세요.");
       return;
     }
-    try {
-      //firebase 인증
-      // setPersistence(auth, browserSessionPersistence); //세션설정
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const token = await user.getIdToken();
-      const authConstructor = {
-        email: user.email,
-        uid: user.uid,
-        token: token,
-      };
-      console.log(user);
-      dispatch(login(authConstructor));
-      setUser(user);
-    } catch (error) {
-      setError("아이디 또는 비밀번호가 다릅니다.");
-    }
+    // try {
+    //   //firebase 인증
+    //   // setPersistence(auth, browserSessionPersistence); //세션설정
+    //   const { user } = await signInWithEmailAndPassword(auth, email, password);
+    //   const token = await user.getIdToken();
+    //   const authConstructor = {
+    //     email: user.email,
+    //     uid: user.uid,
+    //     token: token,
+    //   };
+    //   console.log(user);
+    //   dispatch(login(authConstructor));
+    //   setUser(user);
+    // } catch (error) {
+    //   setError("아이디 또는 비밀번호가 다릅니다.");
+    // }
     if (formRef.current) {
       formRef.current.reset();
     }
