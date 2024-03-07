@@ -72,7 +72,7 @@ const RequestPage = () => {
           <div>
             <label htmlFor="month">급여 내역</label>
             <StyledSelect id="month" name="month" onChange={handleChange}>
-              <option value="">--선택해주세요--</option>
+              <option value="">선택해주세요</option>
               <optgroup>
                 <option value="jan">1월</option>
                 <option value="feb">2월</option>
@@ -92,7 +92,7 @@ const RequestPage = () => {
           <div>
             <label htmlFor="approver">결재자</label>
             <StyledSelect id="approver" name="approver" onChange={handleChange}>
-              <option value="">--선택해주세요--</option>
+              <option value="">선택해주세요</option>
               <optgroup>
                 <option value="manager">정지혜</option>
                 <option value="CTO">helpdesku</option>
@@ -102,7 +102,7 @@ const RequestPage = () => {
           <div>
             <label htmlFor="reason">정정 사유</label>
             <StyledSelect id="reason" name="reason" onChange={handleChange}>
-              <option value="">--선택해주세요--</option>
+              <option value="">선택해주세요</option>
               <optgroup>
                 <option value="overtime">업무 연장 미반영</option>
                 <option value="unpaid_leave">무급 휴가 사용 미반영</option>
