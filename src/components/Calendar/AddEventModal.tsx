@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { ScheduleType } from "../../../type/Schedule";
-import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors } from "./EventModalStyles";
+import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors, DateInputWrapper } from "./EventModalStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 interface Props {
   isOpen: boolean;
@@ -16,13 +17,14 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     userId: "",
     id: "",
     title: "",
-    start: "",
-    end: "",
+    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
+    end: moment().format("YYYY-MM-DD"), 
     content: "",
     participant: "",
     backgroundColor: ""
   });
 
+  // 입력 값 변경 처리
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -33,6 +35,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     }));
   };
 
+  // 폼 제출 처리
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
@@ -45,8 +48,8 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     const updatedFormData = {
       ...formData,
       backgroundColor: randomColor,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start: moment(start).format(), 
+      end: moment(end).format(), 
       textColor: 'black',
       borderColor: '#DEDEDE'
     };
@@ -70,7 +73,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 <TitleInput
                   type="text"
                   name="title"
-                  placeholder="일정 추가하기"
+                  placeholder="제목"
                   value={formData.title}
                   onChange={handleChange}
                 />
@@ -79,25 +82,23 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 <IconWrapper>
                   <FontAwesomeIcon icon={faClock} />
                 </IconWrapper>
-                <InputWrapper>
+                <DateInputWrapper>
                   <DateInput
                     type="date"
                     name="start"
                     value={formData.start}
                     onChange={handleChange}
                   />
-                </InputWrapper>
-                <IconWrapper>
-                  <FontAwesomeIcon icon={faChevronRight} />
-                </IconWrapper>
-                <InputWrapper>
+                </DateInputWrapper>
+                -
+                <DateInputWrapper>
                   <DateInput
                     type="date"
                     name="end"
                     value={formData.end}
                     onChange={handleChange}
                   />
-                </InputWrapper>
+                </DateInputWrapper>
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
@@ -132,143 +133,3 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
 };
 
 export default EventModal;
-
-
-// import React, { useState } from "react";
-// import { ScheduleType } from "../../../type/Schedule";
-// import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors } from "./EventModalStyles";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
-
-// interface Props {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   onSubmit: (formData: ScheduleType) => void;
-//   newEvent: ScheduleType;
-// }
-
-// const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
-//   const [formData, setFormData] = useState<ScheduleType>({
-//     userId: "",
-//     id: "",
-//     title: "",
-//     start: "",
-//     end: "",
-//     content: "",
-//     participant: "",
-//     backgroundColor: ""
-//   });
-
-//   // useEffect(() => {
-//   //   setFormData(newEvent); 
-//   // }, [newEvent]);
-
-//   const handleChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     const { name, value } = e.target;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-    
-//     // 이벤트 색상 랜덤 선택
-//     const randomIndex = Math.floor(Math.random() * eventColors.length);
-//     const randomColor = eventColors[randomIndex];
-//     const start = new Date(formData.start);
-//     const end = new Date(formData.end);
-  
-//     const updatedFormData = {
-//       ...formData,
-//       backgroundColor: randomColor,
-//       start: start.toISOString(),
-//       end: end.toISOString(),
-//       textColor: 'black',
-//       borderColor: '#DEDEDE'
-//     };
-//     setFormData(updatedFormData);
-//     onSubmit(updatedFormData);
-//     onClose();
-//     console.log(updatedFormData)
-//   };
-  
-//   return (
-//     <>
-//       {isOpen && (
-//         <ModalWrapper>
-//           <ModalContent>
-//             <CloseButton onClick={onClose}>&times;</CloseButton>
-//             <Form onSubmit={handleSubmit}>
-//               <FormGroup>
-//                 <IconWrapper>
-//                   <FontAwesomeIcon icon={faCalendarCheck} />
-//                 </IconWrapper>
-//                 <TitleInput
-//                   type="text"
-//                   name="title"
-//                   placeholder="일정 추가하기"
-//                   value={formData.title}
-//                   onChange={handleChange}
-//                 />
-//               </FormGroup>
-//               <FormGroup>
-//                 <IconWrapper>
-//                   <FontAwesomeIcon icon={faClock} />
-//                 </IconWrapper>
-//                 <InputWrapper>
-//                   <DateInput
-//                     type="date"
-//                     name="start"
-//                     value={formData.start}
-//                     onChange={handleChange}
-//                   />
-//                 </InputWrapper>
-//                 <IconWrapper>
-//                   <FontAwesomeIcon icon={faChevronRight} />
-//                 </IconWrapper>
-//                 <InputWrapper>
-//                   <DateInput
-//                     type="date"
-//                     name="end"
-//                     value={formData.end}
-//                     onChange={handleChange}
-//                   />
-//                 </InputWrapper>
-//               </FormGroup>
-//               <FormGroup>
-//                 <IconWrapper>
-//                   <FontAwesomeIcon icon={faUsers} />
-//                 </IconWrapper>
-//                 <Input
-//                   type="text"
-//                   name="participant"
-//                   placeholder="참여자 추가하기"
-//                   value={formData.participant || ''}
-//                   onChange={handleChange}
-//                 />
-//               </FormGroup>
-//               <FormGroup>
-//                 <IconWrapper>
-//                   <FontAwesomeIcon icon={faNoteSticky} />
-//                 </IconWrapper>
-//                 <TextArea
-//                   name="content"
-//                   placeholder="메모 추가하기"
-//                   value={formData.content || ''}
-//                   onChange={handleChange}
-//                 />
-//               </FormGroup>
-//               <SubmitButton type="submit">저장</SubmitButton>
-//             </Form>
-//           </ModalContent>
-//         </ModalWrapper>
-//       )}
-//     </>
-//   );
-// };
-
-// export default EventModal;

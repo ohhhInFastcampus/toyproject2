@@ -53,6 +53,10 @@ export const InputWrapper = styled.div`
   flex: 1;
   margin-right: 10px;
 `;
+export const DateInputWrapper = styled.div`
+  flex: 1;
+  // margin-right: 10px;
+`;
 
 const commonInputStyles = `
   padding: 10px 8px;
@@ -71,27 +75,39 @@ const commonInputStyles = `
 
 export const TitleInput = styled.input`
   ${commonInputStyles}
-  font-size: 22px;
+  font-size: 22px; 
+  width: 300px;
+  margin: 0 15px;
+  background-color: transparent; 
 `;
 
 export const Input = styled.input`
   ${commonInputStyles}
   font-size: 13px;
+  border: none;
+  border-bottom: 1px solid transparent; 
+  background-color: transparent; 
 `;
 
 export const DateInput = styled.input`
   ${commonInputStyles}
-  width: 125px;
+  width: 128px;
+  font-size: 13px;
+  border: none;
+  border-bottom: 1px solid transparent; /* Remove border */
+  background-color: transparent; /* Remove background color */
 `;
+
 
 export const TextArea = styled.textarea`
   padding: 10px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid transparent; /* Remove border */
   border-radius: 4px;
   width: 100%;
   font-size: 13px;
   margin-left: 15px;
   margin-right: 15px;
+  background-color: transparent; /* Remove background color */
   &:focus {
     outline: none;
     border: 1px solid #333;
@@ -131,6 +147,11 @@ export const EditButton = styled.button`
 export const DeleteButton = styled.button`
   ${commonButtonStyles}
 `;
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end
+`;
 
 export const eventColors = [
   '#FFADAD', 
@@ -162,11 +183,13 @@ export const Text = styled.span`
 
 export const Title = styled.h2`
   padding: 10px 8px;
-  font-size: 22px;
+  font-size: 22px; /* Keep the font size consistent */
   width: 100%; 
-  margin-left: 15px;
+  margin-left: 10px;
   margin-right: 15px;
+  border-bottom: 1px solid transparent; /* Remove border */
+  background-color: transparent; /* Remove background color */
   &:hover {
-    color: #333
+    color: #333;
   }
 `;
