@@ -3,6 +3,8 @@ import Button from "@/components/Button";
 import { useState } from "react";
 import styled from "styled-components";
 import Textarea from "../../components/Textarea";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const StyledRequest = styled.div`
   width: 50%;
@@ -37,21 +39,59 @@ const StyledSelect = styled.select`
 `;
 
 const RequestPage = () => {
-  const [option, setOption] = useState("");
-  const [text, setText] = useState("요청 사항을 입력해주세요.");
+  const [month, setMonth] = useState("");
+  const [approver, setApprover] = useState("");
+  const [reason, setReason] = useState("");
+  const [text, setText] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setOption(e.target.value);
+    if (e.target.name === "month") {
+      setMonth(e.target.value);
+    } else if (e.target.name === "approver") {
+      setApprover(e.target.value);
+    } else if (e.target.name === "reason") {
+      setReason(e.target.value);
+    }
+  };
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const docRef = doc(collection(db, "requests"));
+    await setDoc(docRef, {
+      month,
+      approver,
+      reason,
+      text,
+    });
   };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <StyledRequest>
         <h2>정정 신청 페이지</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="reviewer">결재자</label>
-            <StyledSelect id="reviewer" name="reviewer" onChange={handleChange}>
+            <label htmlFor="month">급여 내역</label>
+            <StyledSelect id="month" name="month" onChange={handleChange}>
+              <option value="">선택해주세요</option>
+              <optgroup>
+                <option value="jan">1월</option>
+                <option value="feb">2월</option>
+                <option value="mar">3월</option>
+                <option value="apr">4월</option>
+                <option value="may">5월</option>
+                <option value="jun">6월</option>
+                <option value="jul">7월</option>
+                <option value="aug">8월</option>
+                <option value="sep">9월</option>
+                <option value="oct">10월</option>
+                <option value="nov">11월</option>
+                <option value="dec">12월</option>
+              </optgroup>
+            </StyledSelect>
+          </div>
+          <div>
+            <label htmlFor="approver">결재자</label>
+            <StyledSelect id="approver" name="approver" onChange={handleChange}>
               <option value="">선택해주세요</option>
               <optgroup>
                 <option value="manager">정지혜</option>
@@ -72,7 +112,11 @@ const RequestPage = () => {
           </div>
           <label htmlFor="memo">요청사항</label>
           <br />
-          <Textarea text={text} setText={setText} />
+          <Textarea
+            name="text"
+            setText={setText}
+            placeholder="요청 사항을 입력해주세요."
+          />
           <Button type="submit">제출하기</Button>
         </form>
       </StyledRequest>
