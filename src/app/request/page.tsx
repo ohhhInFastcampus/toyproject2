@@ -3,6 +3,8 @@ import Button from "@/components/Button";
 import { useState } from "react";
 import styled from "styled-components";
 import Textarea from "../../components/Textarea";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const StyledRequest = styled.div`
   width: 50%;
@@ -51,11 +53,15 @@ const RequestPage = () => {
       setReason(e.target.value);
     }
   };
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
-    //TODO console.log 지우고 서버로 보내는 방식으로 처리
-    console.log({ month, approver, reason, text });
+    const docRef = doc(collection(db, "requests"));
+    await setDoc(docRef, {
+      month,
+      approver,
+      reason,
+      text,
+    });
   };
 
   return (
