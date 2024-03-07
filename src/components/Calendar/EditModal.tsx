@@ -1,33 +1,29 @@
-import React, { useState } from "react";
-import { ScheduleType } from "../../../type/Schedule";
-import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors } from "./EventModalStyles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from 'react';
+import { ScheduleType } from '../../../type/Schedule';
+import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton } from "./EventModalStyles";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarCheck, faChevronRight, faClock, faNoteSticky, faUsers } from '@fortawesome/free-solid-svg-icons';
 
-interface Props {
+interface EditModalProps {
   isOpen: boolean;
+  event: ScheduleType;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType;
 }
 
-  const EventModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, newEvent }) => {
-    const [formData, setFormData] = useState<ScheduleType>({
-      userId: "",
-      id: "",
-      title: "",
-      start: "",
-      end: "",
-      content: "",
-      participant: "",
-      backgroundColor: ""
-    });
+const EditModal = ({ isOpen, event, onClose, onSubmit }: EditModalProps) => {
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const [formData, setFormData] = useState<ScheduleType>(event);
+
+
+  useEffect(() => {
+    setFormData(event); 
+  }, [event]);
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
@@ -35,27 +31,11 @@ interface Props {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // 이벤트 색상 랜덤 선택
-    const randomIndex = Math.floor(Math.random() * eventColors.length);
-    const randomColor = eventColors[randomIndex];
-    const start = new Date(formData.start);
-    const end = new Date(formData.end);
-  
-    const updatedFormData = {
-      ...formData,
-      backgroundColor: randomColor,
-      start: start.toISOString(),
-      end: end.toISOString(),
-      textColor: 'black',
-      borderColor: '#DEDEDE'
-    };
-    setFormData(updatedFormData);
-    onSubmit(updatedFormData);
+
+    onSubmit(formData);
     onClose();
-    console.log(formData)
   };
-  
+
   return (
     <>
       {isOpen && (
@@ -70,7 +50,6 @@ interface Props {
                 <TitleInput
                   type="text"
                   name="title"
-                  placeholder="일정 추가하기"
                   value={formData.title}
                   onChange={handleChange}
                 />
@@ -81,9 +60,9 @@ interface Props {
                 </IconWrapper>
                 <InputWrapper>
                   <DateInput
-                    type="date"
+                    type="text"
                     name="start"
-                    value={formData.start}
+                    value={new Date(formData.start).toDateString()}
                     onChange={handleChange}
                   />
                 </InputWrapper>
@@ -92,9 +71,9 @@ interface Props {
                 </IconWrapper>
                 <InputWrapper>
                   <DateInput
-                    type="date"
+                    type="text"
                     name="end"
-                    value={formData.end}
+                    value={new Date(formData.end).toDateString()}
                     onChange={handleChange}
                   />
                 </InputWrapper>
@@ -106,7 +85,6 @@ interface Props {
                 <Input
                   type="text"
                   name="participant"
-                  placeholder="참여자 추가하기"
                   value={formData.participant}
                   onChange={handleChange}
                 />
@@ -117,12 +95,11 @@ interface Props {
                 </IconWrapper>
                 <TextArea
                   name="content"
-                  placeholder="메모 추가하기"
                   value={formData.content}
                   onChange={handleChange}
                 />
               </FormGroup>
-              <SubmitButton type="submit">저장</SubmitButton>
+              <SubmitButton type="submit">수정</SubmitButton>
             </Form>
           </ModalContent>
         </ModalWrapper>
@@ -131,4 +108,4 @@ interface Props {
   );
 };
 
-export default EventModal;
+export default EditModal;

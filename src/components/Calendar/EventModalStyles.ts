@@ -145,3 +145,18 @@ export const eventColors = [
   '#D9EDF8', 
   '#DEDAF4'
 ];
+
+export const Label = styled.label`
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+`;
+
+export const Textarea = styled.textarea`
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  resize: vertical;
+`;

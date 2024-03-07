@@ -7,10 +7,12 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { CalendarContainer } from "./CalendarStyles"; 
 import EventModal from "./AddEventModal";
 import { ScheduleType } from "../../../type/Schedule";
+import EditModal from "./EditModal";
 
 const Calendar = () => {
   const [events, setEvents] = useState<ScheduleType[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false)
   const [newEvent, setNewEvent] = useState<ScheduleType>({
     userId: "",
     id: "",
@@ -55,6 +57,12 @@ const Calendar = () => {
       participant: "",
     });
   }
+
+  function handleEditModal(data: { event: ScheduleType }) {
+    setNewEvent(data.event); // Set the event data to be edited
+    setShowEditModal(true); // Open the EditModal
+  }
+  
 
   function handleCloseModal() {
     setShowModal(false);
@@ -102,6 +110,7 @@ const Calendar = () => {
           selectMirror={true}
           dateClick={handleDateClick}
           drop={(data) => addEvent(data)}
+          eventClick={(data) => handleEditModal(data)}
         />
         {showModal && (
           <EventModal
@@ -109,6 +118,18 @@ const Calendar = () => {
             onSubmit={handleFormSubmit}
             newEvent={newEvent}
             isOpen={showModal}
+          />
+        )}
+        {showEditModal && (
+          <EditModal 
+            isOpen={showEditModal}
+            event={newEvent}
+            onClose={() => setShowEditModal(false)}
+            onSubmit={(formData: ScheduleType) => {
+              // Handle editing the event data
+              // You can update the event data in the events array or any other state management approach you are using
+              setShowEditModal(false);
+            }}           
           />
         )}
       </CalendarContainer>
