@@ -27,6 +27,8 @@ import moment from "moment";
 import { ScheduleType } from "@/../type/Schedule";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/_store/store";
 
 interface Props {
   isOpen: boolean;
@@ -36,8 +38,9 @@ interface Props {
 }
 
 const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
+  const email = useSelector((state: RootState) => state.auth.email);
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: "",
+    userId: email ?? "",
     id: "",
     title: "",
     start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
