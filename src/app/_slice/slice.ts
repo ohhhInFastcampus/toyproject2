@@ -13,14 +13,39 @@ const getCookie = (name: string): string | null => {
       })[0] || null
   );
 };
+const decodeJWT = (token: string | null): { email?: string; uid?: string } => {
+  try {
+    if (!token) {
+      return {};
+    }
+    const base64Url = token.split(".")[1]; // JWT의 payload 부분을 추출
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Base64 URL to Base64
+    const payload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
 
+    // const { email, user_id: uid } = JSON.parse(payload);
+    return JSON.parse(payload);
+  } catch (error) {
+    console.error("Failed to decode JWT", error);
+    return {};
+  }
+};
 const EXPIRES_IN = 3600;
+const userToken = typeof window !== "undefined" ? getCookie("token") : null;
+const decodedUserToken = decodeJWT(userToken);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    email: null,
-    uid: null,
-    token: typeof window !== "undefined" ? getCookie("token") : null,
+    email: decodedUserToken?.email ?? null,
+    uid: decodedUserToken?.uid ?? null,
+    token: userToken,
   },
   reducers: {
     login: (state, action) => {
@@ -33,7 +58,6 @@ const authSlice = createSlice({
       };expires=${expireDate.toUTCString()};path=/;`;
     },
     logout: (state) => {
-      console.log("로그아웃로직 redusx");
       state.email = null;
       state.uid = null;
       state.token = null;
