@@ -1,9 +1,32 @@
 import React, { useState } from "react";
-import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, InputWrapper, TitleInput, Input, DateInput, TextArea, SubmitButton, eventColors, DateInputWrapper } from "./EventModalStyles";
+import {
+  ModalWrapper,
+  ModalContent,
+  CloseButton,
+  Form,
+  FormGroup,
+  IconWrapper,
+  InputWrapper,
+  TitleInput,
+  Input,
+  DateInput,
+  TextArea,
+  SubmitButton,
+  eventColors,
+  DateInputWrapper,
+} from "./EventModalStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faUsers, faNoteSticky, faChevronRight, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faUsers,
+  faNoteSticky,
+  faChevronRight,
+  faCalendarCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/../type/Schedule";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 interface Props {
   isOpen: boolean;
@@ -18,10 +41,10 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     id: "",
     title: "",
     start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
-    end: moment().format("YYYY-MM-DD"), 
+    end: moment().format("YYYY-MM-DD"),
     content: "",
     participant: "",
-    backgroundColor: ""
+    backgroundColor: "",
   });
 
   // 입력 값 변경 처리
@@ -36,29 +59,40 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
   };
 
   // 폼 제출 처리
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // 이벤트 색상 랜덤 선택
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
     const end = new Date(formData.end);
-  
+
     const updatedFormData = {
       ...formData,
       backgroundColor: randomColor,
-      start: moment(start).format(), 
-      end: moment(end).format(), 
-      textColor: 'black',
-      borderColor: '#DEDEDE'
+      start: moment(start).format(),
+      end: moment(end).format(),
+      textColor: "black",
+      borderColor: "#DEDEDE",
     };
     setFormData(updatedFormData);
     onSubmit(updatedFormData);
     onClose();
-    console.log(updatedFormData)
+    console.log(updatedFormData);
+    const docRef = doc(collection(db, "schedule"));
+    await setDoc(docRef, {
+      userId: updatedFormData.userId,
+      id: updatedFormData.id,
+      title: updatedFormData.title,
+      start: updatedFormData.start,
+      end: updatedFormData.end,
+      content: updatedFormData.content,
+      participant: updatedFormData.participant,
+      backgroundColor: updatedFormData.backgroundColor,
+    });
   };
-  
+
   return (
     <>
       {isOpen && (
@@ -108,7 +142,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                   type="text"
                   name="participant"
                   placeholder="참여자 추가하기"
-                  value={formData.participant || ''}
+                  value={formData.participant || ""}
                   onChange={handleChange}
                 />
               </FormGroup>
@@ -119,7 +153,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 <TextArea
                   name="content"
                   placeholder="메모 추가하기"
-                  value={formData.content || ''}
+                  value={formData.content || ""}
                   onChange={handleChange}
                 />
               </FormGroup>
