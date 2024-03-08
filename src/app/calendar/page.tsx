@@ -9,6 +9,8 @@ import { CalendarContainer } from "./_components/CalendarStyles";
 import EventModal from "./_components/AddEventModal";
 import { ScheduleType } from "../../../type/Schedule";
 import EditModal from "./_components/EditModal";
+import { db } from "@/firebase"; 
+import { collection, doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
 
 const Calendar = () => {
   const [events, setEvents] = useState<ScheduleType[]>([]);
@@ -24,7 +26,28 @@ const Calendar = () => {
     participant: "",
     backgroundColor: ""
   });
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventsCollectionRef = collection(db, "schedule"); // "schedule" 컬렉션에 대한 참조
+        const querySnapshot = await getDocs(eventsCollectionRef); // 컬렉션에서 문서 가져오기
+
+        const fetchedEvents: ScheduleType[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedEvents.push(doc.data() as ScheduleType);
+        });
+
+        setEvents(fetchedEvents);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
   
+
   function handleDateClick(arg: { date: Date }) {
     const newEvent: ScheduleType = {
       userId: "",
