@@ -39,9 +39,10 @@ interface Props {
 
 const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
   const email = useSelector((state: RootState) => state.auth.email);
+  const Id = Date.now().toString();
   const [formData, setFormData] = useState<ScheduleType>({
     userId: email ?? "",
-    id: "",
+    id: Id,
     title: "",
     start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
     end: moment().format("YYYY-MM-DD"),
