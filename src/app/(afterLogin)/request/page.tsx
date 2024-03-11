@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { RequestType } from "@/type/Request";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
+import Image from "next/image";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -17,15 +18,30 @@ const ModalBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10;
 `;
-
+const CloseButtonContainer = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+`;
 const ModalContainer = styled.div`
+  position: relative;
   background-color: white;
-  padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 `;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  margin-right: 10rem;
+`;
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -34,7 +50,7 @@ const Container = styled.div`
 
 const StyledTable = styled.table`
   width: 80%;
-  margin-top: 20px;
+  margin-top: 2rem;
   border-collapse: collapse;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 `;
@@ -55,14 +71,14 @@ const StyledTr = styled.tr`
 
 // 테이블 헤더 셀 스타일
 const StyledTh = styled.th`
-  padding: 12px 15px;
+  padding: 1rem 1.1rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
 `;
 
 // 테이블 데이터 셀 스타일
 const StyledTd = styled.td`
-  padding: 12px 15px;
+  padding: 1rem 1.1rem;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -93,13 +109,21 @@ const RequestPage = () => {
 
   return (
     <div>
-      <Button onClick={handleOpenModal}>정정 신청하기</Button>
-      <h2>정정 신청 내역</h2>
+      <ButtonContainer>
+        <Button onClick={handleOpenModal}>정정 신청하기</Button>{" "}
+      </ButtonContainer>
+      <Title>
+        <h2>정정 신청 내역</h2>
+      </Title>
       {requestModal && (
         <ModalBackground onClick={handleCloseModal}>
           <ModalContainer onClick={(e) => e.stopPropagation()}>
+            <CloseButtonContainer>
+              <Button onClick={handleCloseModal}>
+                <Image src="/xmark.svg" alt="닫기" width={25} height={25} />
+              </Button>
+            </CloseButtonContainer>
             <Correction />
-            <Button onClick={handleCloseModal}>닫기</Button>
           </ModalContainer>
         </ModalBackground>
       )}
