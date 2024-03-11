@@ -19,7 +19,9 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
   }
-
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/calendar", request.url));
+  }
   // 로그인 상태가 아니고 로그인 페이지가 아닌 다른 페이지에 접근 시 /login으로 리디렉션
   if (!isLoggedIn && pathname !== "/login") {
     // console.log(

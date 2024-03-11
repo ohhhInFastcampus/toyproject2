@@ -61,18 +61,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/pay");
+      router.push("/");
     }
   }, [user, router]);
 
   return (
     <StyledContainer>
-      <LoginForm
-        // loginFn={login}
-        error={error}
-        onSubmit={formAction}
-        formRef={formRef}
-      />
+      <LoginForm error={error} onSubmit={formAction} formRef={formRef} />
     </StyledContainer>
   );
 };
