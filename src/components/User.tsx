@@ -35,12 +35,7 @@ const User = ({ onClick, name, profile }: UserProps) => {
   return (
     <UserContainer onClick={onClick}>
       {clientPhotoURL && (
-        <Image
-          src={clientPhotoURL}
-          alt="user profile"
-          width={500}
-          height={300}
-        />
+        <Image src={clientPhotoURL} alt="user profile" width={50} height={50} />
       )}
       <UserName>{name}</UserName>
     </UserContainer>
