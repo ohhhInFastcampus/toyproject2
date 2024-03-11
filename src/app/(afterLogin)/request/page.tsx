@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Correction from "./_component/correction";
 import styled from "styled-components";
 import { RequestType } from "@/type/Request";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 
 const ModalBackground = styled.div`
@@ -26,6 +26,45 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 `;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: top;
+`;
+
+const StyledTable = styled.table`
+  width: 80%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+`;
+
+// 테이블 헤더 스타일
+const StyledThead = styled.thead`
+  background-color: #1f1f1f;
+  color: white;
+  border-radius: 10px;
+`;
+
+// 테이블 행 스타일
+const StyledTr = styled.tr`
+  &:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+`;
+
+// 테이블 헤더 셀 스타일
+const StyledTh = styled.th`
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+`;
+
+// 테이블 데이터 셀 스타일
+const StyledTd = styled.td`
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+`;
 
 const RequestPage = () => {
   const [requestModal, setRequestModal] = useState(false);
@@ -33,7 +72,8 @@ const RequestPage = () => {
 
   useEffect(() => {
     const fetchSubmissions = async () => {
-      const querySnapshot = await getDocs(collection(db, "requests"));
+      const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
       const submissionsData = querySnapshot.docs.map(
         (doc) => doc.data() as RequestType
       );
@@ -42,6 +82,7 @@ const RequestPage = () => {
 
     fetchSubmissions();
   }, []);
+
   const handleOpenModal = () => {
     setRequestModal(true);
   };
@@ -62,26 +103,28 @@ const RequestPage = () => {
           </ModalContainer>
         </ModalBackground>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>월</th>
-            <th>결재자</th>
-            <th>정정 사유</th>
-            <th>요청사항</th>
-          </tr>
-        </thead>
-        <tbody>
-          {submissions.map((submission, index: number) => (
-            <tr key={index}>
-              <td>{submission.month}</td>
-              <td>{submission.approver}</td>
-              <td>{submission.reason}</td>
-              <td>{submission.memo}</td>
+      <Container>
+        <StyledTable>
+          <StyledThead>
+            <tr>
+              <StyledTh>월</StyledTh>
+              <StyledTh>결재자</StyledTh>
+              <StyledTh>정정 사유</StyledTh>
+              <StyledTh>요청사항</StyledTh>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </StyledThead>
+          <tbody>
+            {submissions.map((submission, index) => (
+              <StyledTr key={index}>
+                <StyledTd>{submission.month}</StyledTd>
+                <StyledTd>{submission.approver}</StyledTd>
+                <StyledTd>{submission.reason}</StyledTd>
+                <StyledTd>{submission.memo}</StyledTd>
+              </StyledTr>
+            ))}
+          </tbody>
+        </StyledTable>
+      </Container>
     </div>
   );
 };

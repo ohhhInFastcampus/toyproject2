@@ -3,7 +3,7 @@ import Button from "@/components/Button";
 import { useState } from "react";
 import styled from "styled-components";
 import Textarea from "@/components/Textarea";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { RequestType } from "@/type/Request";
 
@@ -43,7 +43,6 @@ const Correction = () => {
   const [approver, setApprover] = useState("");
   const [reason, setReason] = useState("");
   const [text, setText] = useState("");
-  const [submissions, setSubmissions] = useState<RequestType[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.name === "month") {
@@ -62,7 +61,8 @@ const Correction = () => {
       month,
       approver,
       reason,
-      text,
+      memo: text,
+      createdAt: serverTimestamp(),
     });
   };
 
