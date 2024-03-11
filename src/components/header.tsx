@@ -5,9 +5,10 @@ import User from "./User";
 import styled from "styled-components";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { UserType } from "@/type/UserType";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
-import { UserType } from "../type/UserType";
+import Button from "./Button";
 
 const StyledLink = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const Gnb = () => {
   return (
     <>
       <Link href="/" passHref>
-        <StyledLink>HOME</StyledLink>
+        <StyledLink>캘린더</StyledLink>
       </Link>
       <Link href="/pay" passHref>
         <StyledLink>급여내역</StyledLink>
@@ -49,12 +50,12 @@ const HeaderContainer = styled.div`
 
 const Header = () => {
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+  const [logout, setLogout] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userData: UserType = {
-          userId: user.uid,
           name: user.displayName || "",
           email: user.email || "",
           profile: user.photoURL || "",
@@ -68,11 +69,25 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      setCurrentUser(null);
+      setLogout(false);
+    });
+  };
+
   return (
     <HeaderContainer>
       <Image src="/next.svg" alt="profile picture" width={100} height={100} />
       <Gnb />
-      {currentUser ? <User {...currentUser} /> : <div>Loading user...</div>}
+      {currentUser ? (
+        <>
+          <User {...currentUser} onClick={() => setLogout(!logout)} />
+          {logout && <Button onClick={handleLogout}>로그아웃</Button>}
+        </>
+      ) : (
+        <div>Loading user...</div>
+      )}
     </HeaderContainer>
   );
 };

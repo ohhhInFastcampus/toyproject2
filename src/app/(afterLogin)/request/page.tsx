@@ -1,125 +1,154 @@
 "use client";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Correction from "./_component/correction";
 import styled from "styled-components";
-import Textarea from "@/components/Textarea";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { RequestType } from "@/type/Request";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
+import Image from "next/image";
 
-const StyledRequest = styled.div`
-  width: 50%;
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 20px;
-  padding: 80px;
-  gap: 60px;
-  border: 1px solid #555;
+  z-index: 10;
+`;
+const CloseButtonContainer = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+`;
+const ModalContainer = styled.div`
+  position: relative;
+  background-color: white;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  margin-right: 10rem;
+`;
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
-const StyledSelect = styled.select`
-  width: 100%;
-  padding: 8px 12px;
-  margin: 20px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  font-size: 16px;
-  &:hover {
-    border-color: #888;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: top;
+`;
+
+const StyledTable = styled.table`
+  width: 80%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+`;
+
+// 테이블 헤더 스타일
+const StyledThead = styled.thead`
+  background-color: #1f1f1f;
+  color: white;
+  border-radius: 10px;
+`;
+
+// 테이블 행 스타일
+const StyledTr = styled.tr`
+  &:nth-child(even) {
+    background-color: #f2f2f2;
   }
-  &:focus {
-    outline: none;
-    border-color: #555;
-  }
+`;
+
+// 테이블 헤더 셀 스타일
+const StyledTh = styled.th`
+  padding: 1rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+`;
+
+// 테이블 데이터 셀 스타일
+const StyledTd = styled.td`
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid #ddd;
 `;
 
 const RequestPage = () => {
-  const [month, setMonth] = useState("");
-  const [approver, setApprover] = useState("");
-  const [reason, setReason] = useState("");
-  const [text, setText] = useState("");
+  const [requestModal, setRequestModal] = useState(false);
+  const [submissions, setSubmissions] = useState<RequestType[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.name === "month") {
-      setMonth(e.target.value);
-    } else if (e.target.name === "approver") {
-      setApprover(e.target.value);
-    } else if (e.target.name === "reason") {
-      setReason(e.target.value);
-    }
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      const submissionsData = querySnapshot.docs.map(
+        (doc) => doc.data() as RequestType
+      );
+      setSubmissions(submissionsData);
+    };
+
+    fetchSubmissions();
+  }, []);
+
+  const handleOpenModal = () => {
+    setRequestModal(true);
   };
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    const docRef = doc(collection(db, "requests"));
-    await setDoc(docRef, {
-      month,
-      approver,
-      reason,
-      text,
-    });
+
+  const handleCloseModal = () => {
+    setRequestModal(false);
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <StyledRequest>
-        <h2>정정 신청 페이지</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="month">급여 내역</label>
-            <StyledSelect id="month" name="month" onChange={handleChange}>
-              <option value="">선택해주세요</option>
-              <optgroup>
-                <option value="jan">1월</option>
-                <option value="feb">2월</option>
-                <option value="mar">3월</option>
-                <option value="apr">4월</option>
-                <option value="may">5월</option>
-                <option value="jun">6월</option>
-                <option value="jul">7월</option>
-                <option value="aug">8월</option>
-                <option value="sep">9월</option>
-                <option value="oct">10월</option>
-                <option value="nov">11월</option>
-                <option value="dec">12월</option>
-              </optgroup>
-            </StyledSelect>
-          </div>
-          <div>
-            <label htmlFor="approver">결재자</label>
-            <StyledSelect id="approver" name="approver" onChange={handleChange}>
-              <option value="">선택해주세요</option>
-              <optgroup>
-                <option value="manager">정지혜</option>
-                <option value="CTO">helpdesku</option>
-              </optgroup>
-            </StyledSelect>
-          </div>
-          <div>
-            <label htmlFor="reason">정정 사유</label>
-            <StyledSelect id="reason" name="reason" onChange={handleChange}>
-              <option value="">선택해주세요</option>
-              <optgroup>
-                <option value="overtime">업무 연장 미반영</option>
-                <option value="unpaid_leave">무급 휴가 사용 미반영</option>
-                <option value="holiday_work">휴일 근무 미반영</option>
-              </optgroup>
-            </StyledSelect>
-          </div>
-          <label htmlFor="memo">요청사항</label>
-          <br />
-          <Textarea
-            name="text"
-            setText={setText}
-            placeholder="요청 사항을 입력해주세요."
-          />
-          <Button type="submit">제출하기</Button>
-        </form>
-      </StyledRequest>
+    <div>
+      <ButtonContainer>
+        <Button onClick={handleOpenModal}>정정 신청하기</Button>{" "}
+      </ButtonContainer>
+      <Title>
+        <h2>정정 신청 내역</h2>
+      </Title>
+      {requestModal && (
+        <ModalBackground onClick={handleCloseModal}>
+          <ModalContainer onClick={(e) => e.stopPropagation()}>
+            <CloseButtonContainer>
+              <Button onClick={handleCloseModal}>
+                <Image src="/xmark.svg" alt="닫기" width={25} height={25} />
+              </Button>
+            </CloseButtonContainer>
+            <Correction />
+          </ModalContainer>
+        </ModalBackground>
+      )}
+      <Container>
+        <StyledTable>
+          <StyledThead>
+            <tr>
+              <StyledTh>월</StyledTh>
+              <StyledTh>결재자</StyledTh>
+              <StyledTh>정정 사유</StyledTh>
+              <StyledTh>요청사항</StyledTh>
+            </tr>
+          </StyledThead>
+          <tbody>
+            {submissions.map((submission, index) => (
+              <StyledTr key={index}>
+                <StyledTd>{submission.month}</StyledTd>
+                <StyledTd>{submission.approver}</StyledTd>
+                <StyledTd>{submission.reason}</StyledTd>
+                <StyledTd>{submission.memo}</StyledTd>
+              </StyledTr>
+            ))}
+          </tbody>
+        </StyledTable>
+      </Container>
     </div>
   );
 };

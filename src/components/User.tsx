@@ -1,8 +1,10 @@
-"use client";
-
+// "next/image"를 한 번만 임포트합니다.
 import Image from "next/image";
 import styled from "styled-components";
 import { UserType } from "../type/UserType";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const UserContainer = styled.div`
   display: flex;
@@ -18,10 +20,25 @@ const UserName = styled.div`
   font-size: 15px;
 `;
 
-const User = ({ name, profile }: UserType) => {
+interface UserProps extends UserType {
+  onClick: () => void;
+}
+
+const User = ({ onClick }: UserProps) => {
+  const [clientPhotoURL, setClientPhotoURL] = useState<string | null>(null);
+  const photoURL = useSelector((state: RootState) => state.auth.photoURL);
+  const name = useSelector((state: RootState) => state.auth.name);
+  console.log("User name:", name);
+
+  useEffect(() => {
+    setClientPhotoURL(photoURL);
+  }, [photoURL]);
+
   return (
-    <UserContainer>
-      <Image src={profile} alt="profile picture" width={70} height={70} />
+    <UserContainer onClick={onClick}>
+      {clientPhotoURL && (
+        <Image src={clientPhotoURL} alt="user profile" width={50} height={50} />
+      )}
       <UserName>{name}</UserName>
     </UserContainer>
   );
