@@ -6,7 +6,6 @@ import {
   Form,
   FormGroup,
   IconWrapper,
-  InputWrapper,
   TitleInput,
   Input,
   DateInput,
@@ -20,7 +19,6 @@ import {
   faClock,
   faUsers,
   faNoteSticky,
-  faChevronRight,
   faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
@@ -94,6 +92,8 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
       content: updatedFormData.content,
       participant: updatedFormData.participant,
       backgroundColor: updatedFormData.backgroundColor,
+      textColor: "black",
+      borderColor: "#DEDEDE",
     });
   };
 
