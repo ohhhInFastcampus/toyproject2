@@ -77,6 +77,7 @@ const RequestPage = () => {
       const submissionsData = querySnapshot.docs.map(
         (doc) => doc.data() as RequestType
       );
+      setSubmissions(submissionsData);
     };
 
     fetchSubmissions();
