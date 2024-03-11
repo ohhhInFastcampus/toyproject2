@@ -23,7 +23,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/type/Schedule";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
+
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 interface Props {
@@ -43,15 +45,15 @@ const EditModal = ({
   onDelete, 
   event,
   userId,
-  id,
 }: Props) => {
-  
   const [formData, setFormData] = useState<ScheduleType>(event);
 
+  // Updates form data when the event prop changes
   useEffect(() => {
     setFormData(event);
   }, [event]);
 
+  // Updates the form data when input fields change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -62,14 +64,37 @@ const EditModal = ({
     }));
   };
 
+  // Handles form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedFormData = { ...formData };
+    const updatedFormData = {
+      ...formData,
+      // id: formData.id || uuidv4(), // Use the provided id or generate UUID
+      textColor: formData.textColor || "black",
+      borderColor: formData.borderColor || "#DEDEDE",
+      backgroundColor: formData.backgroundColor || "", // Provide default value
+    };
+    console.log("Document ID to update:", event.id);
+    if (event.id) { // Check if formData.id is defined
+      const docRef = doc(db, "schedule", event.id);
+      await updateDoc(docRef, updatedFormData);
+    }
+
     onSubmit(updatedFormData);
     onClose();
-    console.log("Edit Modal - Form Data:", formData); // Log the form data
   };
-  console.log("Edit Modal - Event Data:", event);
+    
+    // Handle event deletion
+    const handleDelete = async () => {
+      console.log(formData.id)
+      if (formData.id) { // Check if formData.id is defined
+        const docRef = doc(db, "schedule", formData.id);
+        await deleteDoc(docRef);
+        onDelete();
+        onClose();
+      }
+      console.log(formData)
+    };
 
   return (
     <>
@@ -141,7 +166,8 @@ const EditModal = ({
               </FormGroup>
               <SubmitButton type="submit">저장</SubmitButton>
             </Form>
-            <SubmitButton onClick={onDelete}>삭제</SubmitButton>
+            {/* Button to delete the current event */}
+            <SubmitButton onClick={handleDelete}>삭제</SubmitButton>
           </ModalContent>
         </ModalWrapper>
       )}

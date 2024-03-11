@@ -23,24 +23,25 @@ import {
 } from "firebase/firestore";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
 
 const Calendar = () => {
   const email = useSelector((state: RootState) => state.auth.email);
-  const Id = Date.now().toString();
   const [userId, setUserId] = useState<string>(email ?? "");
-  const [id, setId] = useState<string>(Id);
   const [events, setEvents] = useState<ScheduleType[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newEvent, setNewEvent] = useState<ScheduleType>({
     userId: userId,
-    id: id,
+    id: "", // Initial value is empty
     title: "",
     start: "",
     end: "",
     content: "",
     participant: "",
     backgroundColor: "",
+    textColor: "black",
+    borderColor: "#DEDEDE",
   });
 
   useEffect(() => {
@@ -66,37 +67,43 @@ const Calendar = () => {
   function handleDateClick(arg: { date: Date }) {
     const newEvent: ScheduleType = {
       userId: userId,
-      id: id,
+      id: "", // Generate UUID uuidv4()
       title: "",
       start: "",
       end: "",
       content: "",
       participant: "",
       backgroundColor: "",
+      textColor: "black",
+      borderColor: "#DEDEDE",
     };
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+    setNewEvent(newEvent); // Set the newEvent state for EventModal
     setShowModal(true);
   }
 
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
-      ...newEvent,
+      ...newEvent, // Use the same newEvent state
       start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
-      end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss+0900"),
+      end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
-      id: `${new Date().getTime()}`,
+      // id: newEvent.id || uuidv4(), // If id is not set, generate UUID
+      textColor: "black",
+      borderColor: "#DEDEDE",
     };
     setEvents([...events, event]);
     setShowModal(false);
     setNewEvent({
       userId: userId,
-      id: id,
+      id: "", // Reset id for the next new event
       title: "",
       start: "",
       end: "",
       content: "",
       participant: "",
       backgroundColor: "",
+      textColor: "black",
+      borderColor: "#DEDEDE",
     });
   }
 
@@ -107,18 +114,22 @@ const Calendar = () => {
       title: clickedEvent.event.title,
       start: clickedEvent.event.start,
       end: clickedEvent.event.end,
-      content: clickedEvent.event.extendedProps.content,
-      participant: clickedEvent.event.extendedProps.participant,
-      backgroundColor: clickedEvent.event.extendedProps.backgroundColor,
+      content: clickedEvent.event.extendedProps?.content || "", // Use default value if undefined
+      participant: clickedEvent.event.extendedProps?.participant || "", // Use default value if undefined
+      backgroundColor: clickedEvent.event.backgroundColor || "", // Use default value if undefined
+      textColor: clickedEvent.event.textColor || "", // Use default value if undefined
+      borderColor: clickedEvent.event.borderColor || "", // Use default value if undefined
     };
     setNewEvent(event);
     setShowEditModal(true);
+    console.log(event)
   }
 
   function handleDeleteEvent() {
     const updatedEvents = events.filter((event) => event.id !== newEvent.id);
     setEvents(updatedEvents);
     setShowEditModal(false);
+
   }
 
   function handleEditEvent(formData: ScheduleType) {
@@ -137,13 +148,15 @@ const Calendar = () => {
     setShowModal(false);
     setNewEvent({
       userId: userId,
-      id: id,
+      id: "", // Reset id when closing modal
       title: "",
       start: "",
       end: "",
       content: "",
       participant: "",
       backgroundColor: "",
+      textColor: "black",
+      borderColor: "#DEDEDE",
     });
   }
 
@@ -153,9 +166,11 @@ const Calendar = () => {
 
     const event: ScheduleType = {
       ...formData,
-      id: `${new Date().getTime()}`,
+      // id: newEvent.id || uuidv4(), // If id is not set, generate UUID
       start: start.toISOString(),
       end: end.toISOString(),
+      textColor: "black",
+      borderColor: "#DEDEDE",
     };
 
     setEvents((prevEvents) => [...prevEvents, event]);
@@ -185,9 +200,9 @@ const Calendar = () => {
         {showModal && (
           <EventModal
             onClose={handleCloseModal}
-            onSubmit={handleFormSubmit}
+            onSubmit={(newEvent) => handleFormSubmit(newEvent)}
             userId={userId}
-            id={id}
+            id={newEvent.id || ""}
             isOpen={showModal}
           />
         )}
@@ -196,7 +211,7 @@ const Calendar = () => {
             isOpen={showEditModal}
             event={newEvent}
             userId={userId}
-            id={id}
+            id={newEvent.id || ""}
             onClose={() => setShowEditModal(false)}
             onDelete={handleDeleteEvent}
             onSubmit={handleEditEvent}

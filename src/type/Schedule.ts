@@ -6,6 +6,8 @@ export interface ScheduleType {
     end: string,
     content: string,
     participant: string,
-    backgroundColor: string
+    backgroundColor: string,
+    textColor: string,
+    borderColor: string
     allDay?: boolean,
 }
