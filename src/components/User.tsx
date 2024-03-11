@@ -24,9 +24,11 @@ interface UserProps extends UserType {
   onClick: () => void;
 }
 
-const User = ({ onClick, name, profile }: UserProps) => {
+const User = ({ onClick }: UserProps) => {
   const [clientPhotoURL, setClientPhotoURL] = useState<string | null>(null);
   const photoURL = useSelector((state: RootState) => state.auth.photoURL);
+  const name = useSelector((state: RootState) => state.auth.name);
+  console.log("User name:", name);
 
   useEffect(() => {
     setClientPhotoURL(photoURL);

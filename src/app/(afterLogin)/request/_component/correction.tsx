@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Textarea from "@/components/Textarea";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import { RequestType } from "@/type/Request";
 
 const StyledRequest = styled.div`
   display: flex;
@@ -57,13 +56,20 @@ const Correction = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const docRef = doc(collection(db, "requests"));
-    await setDoc(docRef, {
-      month,
-      approver,
-      reason,
-      memo: text,
-      createdAt: serverTimestamp(),
-    });
+
+    try {
+      await setDoc(docRef, {
+        month,
+        approver,
+        reason,
+        memo: text,
+        createdAt: serverTimestamp(),
+      });
+      alert("신청 완료!");
+    } catch (error) {
+      console.error("신청 실패: ", error);
+      alert("신청 불가");
+    }
   };
 
   return (
