@@ -17,10 +17,12 @@ const UserName = styled.div`
   margin-left: 10px;
   font-size: 15px;
 `;
-
-const User = ({ name, profile }: UserType) => {
+interface UserProps extends UserType {
+  onClick: () => void;
+}
+const User = ({ onClick, name, profile }: UserProps) => {
   return (
-    <UserContainer>
+    <UserContainer onClick={onClick}>
       <Image src={profile} alt="profile picture" width={70} height={70} />
       <UserName>{name}</UserName>
     </UserContainer>
