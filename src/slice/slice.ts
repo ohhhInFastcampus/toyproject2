@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AuthState } from "@/type/Auth";
 const getCookie = (name: string): string | null => {
   const nameLenPlus = name.length + 1;
   return (
@@ -46,7 +47,7 @@ const authSlice = createSlice({
     email: decodedUserToken?.email ?? null,
     uid: decodedUserToken?.uid ?? null,
     token: userToken,
-  },
+  } as AuthState,
   reducers: {
     login: (state, action) => {
       state.email = action.payload.email;

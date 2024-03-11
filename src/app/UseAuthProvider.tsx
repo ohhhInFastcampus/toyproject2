@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext } from "react";
-import useAuth from "./useAuth";
+import useAuth from "@/hooks/useAuth";
 interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;

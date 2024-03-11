@@ -1,8 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { ScheduleType } from "@/../type/Schedule";
-import { ModalWrapper, ModalContent, CloseButton, Form, FormGroup, IconWrapper, Input, Text, TextArea, SubmitButton, Title, EditButton, DeleteButton, DateInputWrapper, DateInput, ButtonContainer, TitleInput } from "./EventModalStyles";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarCheck, faChevronRight, faClock, faEdit, faNoteSticky, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { ScheduleType } from "@/type/Schedule";
+import {
+  ModalWrapper,
+  ModalContent,
+  CloseButton,
+  Form,
+  FormGroup,
+  IconWrapper,
+  Input,
+  Text,
+  TextArea,
+  SubmitButton,
+  Title,
+  EditButton,
+  DeleteButton,
+  DateInputWrapper,
+  DateInput,
+  ButtonContainer,
+  TitleInput,
+} from "./EventModalStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarCheck,
+  faChevronRight,
+  faClock,
+  faEdit,
+  faNoteSticky,
+  faTrash,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 
 interface EditModalProps {
@@ -13,7 +39,13 @@ interface EditModalProps {
   onSubmit: (formData: ScheduleType) => void;
 }
 
-const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProps) => {
+const EditModal = ({
+  isOpen,
+  event,
+  onDelete,
+  onClose,
+  onSubmit,
+}: EditModalProps) => {
   const [formData, setFormData] = useState<ScheduleType>({
     userId: "",
     id: "",
@@ -22,17 +54,19 @@ const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProp
     end: "",
     content: "",
     participant: "",
-    backgroundColor: event.backgroundColor || "", 
+    backgroundColor: event.backgroundColor || "",
   });
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    setFormData(event); 
+    setFormData(event);
   }, [event]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -43,23 +77,23 @@ const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProp
     const updatedFormData = {
       ...formData,
       backgroundColor: event.backgroundColor, // Preserve the color
-      textColor: 'black',
-      borderColor: '#DEDEDE'
+      textColor: "black",
+      borderColor: "#DEDEDE",
     };
     onSubmit(updatedFormData);
     onClose();
-    console.log(updatedFormData)
+    console.log(updatedFormData);
   };
 
-  // 수정 모드 활성화 
+  // 수정 모드 활성화
   const handleEdit = () => {
     setEditMode(true);
-    console.log(formData)
+    console.log(formData);
   };
 
   const handleDelete = () => {
-    onDelete()
-  }
+    onDelete();
+  };
 
   if (!event) {
     return null;
@@ -77,12 +111,13 @@ const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProp
                   <FontAwesomeIcon icon={faCalendarCheck} />
                 </IconWrapper>
                 <Title>
-                  <TitleInput 
-                  type="text" 
-                  name="title" 
-                  value={formData.title} 
-                  onChange={handleChange}
-                  disabled={!editMode} />
+                  <TitleInput
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    disabled={!editMode}
+                  />
                 </Title>
               </FormGroup>
               <FormGroup>
@@ -93,7 +128,7 @@ const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProp
                   <DateInput
                     type="date"
                     name="start"
-                    value={moment(formData.start).format('YYYY-MM-DD')}
+                    value={moment(formData.start).format("YYYY-MM-DD")}
                     onChange={(e) => handleChange(e)}
                     disabled={!editMode}
                   />
@@ -103,7 +138,7 @@ const EditModal = ({ isOpen, event, onDelete, onClose, onSubmit }: EditModalProp
                   <DateInput
                     type="date"
                     name="end"
-                    value={moment(formData.end).format('YYYY-MM-DD')}
+                    value={moment(formData.end).format("YYYY-MM-DD")}
                     onChange={(e) => handleChange(e)}
                     disabled={!editMode}
                   />

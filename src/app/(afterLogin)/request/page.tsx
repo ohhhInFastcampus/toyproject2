@@ -2,9 +2,9 @@
 import Button from "@/components/Button";
 import { useState } from "react";
 import styled from "styled-components";
-import Textarea from "../../components/Textarea";
+import Textarea from "@/components/Textarea";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "@/firebase";
 
 const StyledRequest = styled.div`
   width: 50%;

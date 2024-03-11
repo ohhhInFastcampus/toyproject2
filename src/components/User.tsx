@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styled from "styled-components";
-import { UserType } from "../../type/UserType";
+import { UserType } from "../type/UserType";
 
 const UserContainer = styled.div`
   display: flex;
