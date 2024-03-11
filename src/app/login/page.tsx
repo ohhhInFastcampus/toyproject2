@@ -12,6 +12,7 @@ import { auth } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { login } from "@/slice/slice";
 import { useRouter } from "next/navigation";
+import fetchImgFromFireStorage from "@/utils/getUserImage";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -44,9 +45,20 @@ const LoginPage = () => {
       // setPersistence(auth, browserSessionPersistence); //세션설정
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       const token = await user.getIdToken();
+
+      let PhotoURL = user.photoURL;
+      if (!user.photoURL) {
+        try {
+          PhotoURL = await fetchImgFromFireStorage(email);
+        } catch (e) {
+          PhotoURL = null;
+        }
+      }
+
       const authConstructor = {
         email: user.email,
         uid: user.uid,
+        photoURL: PhotoURL,
         token: token,
       };
       dispatch(login(authConstructor));
@@ -61,18 +73,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/pay");
+      router.push("/");
     }
   }, [user, router]);
 
   return (
     <StyledContainer>
-      <LoginForm
-        // loginFn={login}
-        error={error}
-        onSubmit={formAction}
-        formRef={formRef}
-      />
+      <LoginForm error={error} onSubmit={formAction} formRef={formRef} />
     </StyledContainer>
   );
 };
