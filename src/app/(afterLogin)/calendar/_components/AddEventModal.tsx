@@ -32,24 +32,22 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType;
+  userId: string;
+  id: string;
 }
 
-const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
-  const email = useSelector((state: RootState) => state.auth.email);
-  const Id = Date.now().toString();
+const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: email ?? "",
-    id: Id,
+    userId: userId,
+    id: id,
     title: "",
-    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
-    end: moment().format("YYYY-MM-DD"),
+    start: moment().format("YYYY-MM-DDTHH:mm:ss"),
+    end: moment().format("YYYY-MM-DDTHH:mm:ss"),
     content: "",
     participant: "",
     backgroundColor: "",
   });
 
-  // 입력 값 변경 처리
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -60,11 +58,9 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     }));
   };
 
-  // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 이벤트 색상 랜덤 선택
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
@@ -78,10 +74,12 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
       textColor: "black",
       borderColor: "#DEDEDE",
     };
+    console.log("added event:", updatedFormData); 
+
     setFormData(updatedFormData);
     onSubmit(updatedFormData);
     onClose();
-    console.log(updatedFormData);
+
     const docRef = doc(collection(db, "schedule"));
     await setDoc(docRef, {
       userId: updatedFormData.userId,
@@ -122,18 +120,22 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="start"
-                    value={formData.start}
+                    value={moment(formData.start).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="end"
-                    value={formData.end}
+                    value={moment(formData.end).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>

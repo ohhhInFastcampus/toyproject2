@@ -37,7 +37,7 @@ export const CalendarContainer = styled.div`
   .fc-next-button {
     font-size: 10px; 
   }
-}
+
 
 .fc-event-time {
   display: none;

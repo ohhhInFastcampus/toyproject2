@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ScheduleType } from "@/type/Schedule";
 import {
   ModalWrapper,
   ModalContent,
@@ -7,56 +6,47 @@ import {
   Form,
   FormGroup,
   IconWrapper,
+  TitleInput,
   Input,
-  Text,
+  DateInput,
   TextArea,
   SubmitButton,
-  Title,
-  EditButton,
-  DeleteButton,
+  eventColors,
   DateInputWrapper,
-  DateInput,
-  ButtonContainer,
-  TitleInput,
-} from "./EventModalStyles";
+} from './EventModalStyles'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCalendarCheck,
-  faChevronRight,
   faClock,
-  faEdit,
-  faNoteSticky,
-  faTrash,
   faUsers,
+  faNoteSticky,
+  faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import { ScheduleType } from "@/type/Schedule";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
-interface EditModalProps {
+interface Props {
   isOpen: boolean;
-  event: ScheduleType;
   onClose: () => void;
-  onDelete: () => void;
   onSubmit: (formData: ScheduleType) => void;
+  onDelete: () => void;
+  event: ScheduleType;
+  userId: string;
+  id: string;
 }
 
 const EditModal = ({
   isOpen,
-  event,
-  onDelete,
   onClose,
   onSubmit,
-}: EditModalProps) => {
-  const [formData, setFormData] = useState<ScheduleType>({
-    userId: "",
-    id: "",
-    title: "",
-    start: "",
-    end: "",
-    content: "",
-    participant: "",
-    backgroundColor: event.backgroundColor || "",
-  });
-  const [editMode, setEditMode] = useState(false);
+  onDelete, 
+  event,
+  userId,
+  id,
+}: Props) => {
+  
+  const [formData, setFormData] = useState<ScheduleType>(event);
 
   useEffect(() => {
     setFormData(event);
@@ -72,32 +62,14 @@ const EditModal = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedFormData = {
-      ...formData,
-      backgroundColor: event.backgroundColor, // Preserve the color
-      textColor: "black",
-      borderColor: "#DEDEDE",
-    };
+    const updatedFormData = { ...formData };
     onSubmit(updatedFormData);
     onClose();
-    console.log(updatedFormData);
+    console.log("Edit Modal - Form Data:", formData); // Log the form data
   };
-
-  // 수정 모드 활성화
-  const handleEdit = () => {
-    setEditMode(true);
-    console.log(formData);
-  };
-
-  const handleDelete = () => {
-    onDelete();
-  };
-
-  if (!event) {
-    return null;
-  }
+  console.log("Edit Modal - Event Data:", event);
 
   return (
     <>
@@ -110,15 +82,13 @@ const EditModal = ({
                 <IconWrapper>
                   <FontAwesomeIcon icon={faCalendarCheck} />
                 </IconWrapper>
-                <Title>
-                  <TitleInput
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    disabled={!editMode}
-                  />
-                </Title>
+                <TitleInput
+                  type="text"
+                  name="title"
+                  placeholder="제목"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
@@ -126,21 +96,23 @@ const EditModal = ({
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="start"
-                    value={moment(formData.start).format("YYYY-MM-DD")}
-                    onChange={(e) => handleChange(e)}
-                    disabled={!editMode}
+                    value={moment(formData.start).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
+                    onChange={handleChange}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="end"
-                    value={moment(formData.end).format("YYYY-MM-DD")}
-                    onChange={(e) => handleChange(e)}
-                    disabled={!editMode}
+                    value={moment(formData.end).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
+                    onChange={handleChange}
                   />
                 </DateInputWrapper>
               </FormGroup>
@@ -151,9 +123,9 @@ const EditModal = ({
                 <Input
                   type="text"
                   name="participant"
-                  value={formData.participant}
+                  placeholder="참여자 추가하기"
+                  value={formData.participant || ""}
                   onChange={handleChange}
-                  disabled={!editMode}
                 />
               </FormGroup>
               <FormGroup>
@@ -162,26 +134,14 @@ const EditModal = ({
                 </IconWrapper>
                 <TextArea
                   name="content"
-                  value={formData.content}
+                  placeholder="메모 추가하기"
+                  value={formData.content || ""}
                   onChange={handleChange}
-                  disabled={!editMode}
                 />
               </FormGroup>
-              <ButtonContainer>
-                {editMode ? (
-                  <SubmitButton type="submit">저장</SubmitButton>
-                ) : (
-                  <EditButton type="button" onClick={handleEdit}>
-                    {/* <FontAwesomeIcon icon={faEdit} /> */}
-                    수정
-                  </EditButton>
-                )}
-                <DeleteButton type="button" onClick={handleDelete}>
-                  {/* <FontAwesomeIcon icon={faTrash} /> */}
-                  삭제
-                </DeleteButton>
-              </ButtonContainer>
+              <SubmitButton type="submit">저장</SubmitButton>
             </Form>
+            <SubmitButton onClick={onDelete}>삭제</SubmitButton>
           </ModalContent>
         </ModalWrapper>
       )}
