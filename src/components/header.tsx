@@ -54,6 +54,7 @@ const Header = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userData: UserType = {
+          userId: user.uid,
           name: user.displayName || "",
           email: user.email || "",
           profile: user.photoURL || "",
