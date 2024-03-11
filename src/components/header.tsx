@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
-import { UserType } from "../../type/UserType";
+import { UserType } from "../type/UserType";
 
 const StyledLink = styled.div`
   display: flex;
