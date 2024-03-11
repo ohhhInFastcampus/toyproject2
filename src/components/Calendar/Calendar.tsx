@@ -1,19 +1,22 @@
 "use client";
 import React, { Fragment, useEffect, useState } from "react";
-import moment from 'moment';
+import moment from "moment";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, {Draggable, DropArg,} from "@fullcalendar/interaction";
+import interactionPlugin, {
+  Draggable,
+  DropArg,
+} from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { CalendarContainer } from "./CalendarStyles"; 
+import { CalendarContainer } from "./CalendarStyles";
 import EventModal from "./AddEventModal";
-import { ScheduleType } from "../../../type/Schedule";
+import { ScheduleType } from "../../type/Schedule";
 import EditModal from "./EditModal";
 
 const Calendar = () => {
   const [events, setEvents] = useState<ScheduleType[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false);
   const [newEvent, setNewEvent] = useState<ScheduleType>({
     userId: "",
     id: "",
@@ -22,19 +25,19 @@ const Calendar = () => {
     end: "",
     content: "",
     participant: "",
-    backgroundColor: ""
+    backgroundColor: "",
   });
-  
+
   function handleDateClick(arg: { date: Date }) {
     const newEvent: ScheduleType = {
       userId: "",
       id: "",
       title: "",
       start: "",
-      end: "", 
+      end: "",
       content: "",
       participant: "",
-      backgroundColor: ""
+      backgroundColor: "",
     };
     setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowModal(true);
@@ -43,7 +46,7 @@ const Calendar = () => {
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
       ...newEvent,
-      start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"), 
+      start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
       id: `${new Date().getTime()}`,
@@ -58,7 +61,7 @@ const Calendar = () => {
       end: "",
       content: "",
       participant: "",
-      backgroundColor: ""
+      backgroundColor: "",
     });
   }
 
@@ -69,36 +72,36 @@ const Calendar = () => {
       title: clickedEvent.event.title,
       start: clickedEvent.event.start,
       end: clickedEvent.event.end,
-      content: clickedEvent.event.extendedProps.content, 
-      participant: clickedEvent.event.extendedProps.participant, 
-      backgroundColor: clickedEvent.event.extendedProps.backgroundColor
+      content: clickedEvent.event.extendedProps.content,
+      participant: clickedEvent.event.extendedProps.participant,
+      backgroundColor: clickedEvent.event.extendedProps.backgroundColor,
     };
-    setNewEvent(event); 
+    setNewEvent(event);
     setShowEditModal(true);
-    console.log(event)
-}
-  
-  function handleDeleteEvent() {
-    const updatedEvents = events.filter(event => event.id !== newEvent.id)
-    setEvents(updatedEvents)
-    setShowEditModal(false)
+    console.log(event);
   }
-  
+
+  function handleDeleteEvent() {
+    const updatedEvents = events.filter((event) => event.id !== newEvent.id);
+    setEvents(updatedEvents);
+    setShowEditModal(false);
+  }
+
   function handleEditEvent(formData: ScheduleType) {
     // Find the index of the edited event in the events array
-    const index = events.findIndex(event => event.id === formData.id);
-  
+    const index = events.findIndex((event) => event.id === formData.id);
+
     if (index !== -1) {
       // Update the events array with the edited event data
       const updatedEvents = [...events];
       updatedEvents[index] = formData;
       setEvents(updatedEvents);
     }
-  
+
     // Close the EditModal
     setShowEditModal(false);
   }
-  
+
   function handleCloseModal() {
     setShowModal(false);
     setNewEvent({
@@ -109,14 +112,14 @@ const Calendar = () => {
       end: "",
       content: "",
       participant: "",
-      backgroundColor: ""
+      backgroundColor: "",
     });
   }
 
   function handleFormSubmit(formData: ScheduleType) {
     const start = moment(formData.start).toDate(); // Convert Moment.js object to Date object
     const end = moment(formData.end).toDate();
-  
+
     const event: ScheduleType = {
       ...formData,
       id: `${new Date().getTime()}`,
@@ -157,12 +160,12 @@ const Calendar = () => {
           />
         )}
         {showEditModal && (
-          <EditModal 
+          <EditModal
             isOpen={showEditModal}
             event={newEvent}
             onClose={() => setShowEditModal(false)}
             onDelete={handleDeleteEvent}
-            onSubmit={handleEditEvent}           
+            onSubmit={handleEditEvent}
           />
         )}
       </CalendarContainer>

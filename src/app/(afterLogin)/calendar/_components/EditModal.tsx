@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ScheduleType } from "@/type/Schedule";
 import {
   ModalWrapper,
   ModalContent,
@@ -6,50 +7,61 @@ import {
   Form,
   FormGroup,
   IconWrapper,
-  TitleInput,
   Input,
-  DateInput,
+  Text,
   TextArea,
   SubmitButton,
-  eventColors,
+  Title,
+  EditButton,
+  DeleteButton,
   DateInputWrapper,
+  DateInput,
+  ButtonContainer,
+  TitleInput,
 } from "./EventModalStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faClock,
-  faUsers,
-  faNoteSticky,
   faCalendarCheck,
+  faChevronRight,
+  faClock,
+  faEdit,
+  faNoteSticky,
+  faTrash,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import { ScheduleType } from "@/../type/Schedule";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/_store/store";
 
-interface Props {
+interface EditModalProps {
   isOpen: boolean;
+  event: ScheduleType;
   onClose: () => void;
+  onDelete: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType;
 }
 
-const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
-  const email = useSelector((state: RootState) => state.auth.email);
-  const Id = Date.now().toString();
+const EditModal = ({
+  isOpen,
+  event,
+  onDelete,
+  onClose,
+  onSubmit,
+}: EditModalProps) => {
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: email ?? "",
-    id: Id,
+    userId: "",
+    id: "",
     title: "",
-    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
-    end: moment().format("YYYY-MM-DD"),
+    start: "",
+    end: "",
     content: "",
     participant: "",
-    backgroundColor: "",
+    backgroundColor: event.backgroundColor || "",
   });
+  const [editMode, setEditMode] = useState(false);
 
-  // 입력 값 변경 처리
+  useEffect(() => {
+    setFormData(event);
+  }, [event]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -60,42 +72,32 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     }));
   };
 
-  // 폼 제출 처리
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // 이벤트 색상 랜덤 선택
-    const randomIndex = Math.floor(Math.random() * eventColors.length);
-    const randomColor = eventColors[randomIndex];
-    const start = new Date(formData.start);
-    const end = new Date(formData.end);
-
     const updatedFormData = {
       ...formData,
-      backgroundColor: randomColor,
-      start: moment(start).format(),
-      end: moment(end).format(),
+      backgroundColor: event.backgroundColor, // Preserve the color
       textColor: "black",
       borderColor: "#DEDEDE",
     };
-    setFormData(updatedFormData);
     onSubmit(updatedFormData);
     onClose();
     console.log(updatedFormData);
-    const docRef = doc(collection(db, "schedule"));
-    await setDoc(docRef, {
-      userId: updatedFormData.userId,
-      id: updatedFormData.id,
-      title: updatedFormData.title,
-      start: updatedFormData.start,
-      end: updatedFormData.end,
-      content: updatedFormData.content,
-      participant: updatedFormData.participant,
-      backgroundColor: updatedFormData.backgroundColor,
-      textColor: "black",
-      borderColor: "#DEDEDE",
-    });
   };
+
+  // 수정 모드 활성화
+  const handleEdit = () => {
+    setEditMode(true);
+    console.log(formData);
+  };
+
+  const handleDelete = () => {
+    onDelete();
+  };
+
+  if (!event) {
+    return null;
+  }
 
   return (
     <>
@@ -108,13 +110,15 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 <IconWrapper>
                   <FontAwesomeIcon icon={faCalendarCheck} />
                 </IconWrapper>
-                <TitleInput
-                  type="text"
-                  name="title"
-                  placeholder="제목"
-                  value={formData.title}
-                  onChange={handleChange}
-                />
+                <Title>
+                  <TitleInput
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    disabled={!editMode}
+                  />
+                </Title>
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
@@ -124,8 +128,9 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                   <DateInput
                     type="date"
                     name="start"
-                    value={formData.start}
-                    onChange={handleChange}
+                    value={moment(formData.start).format("YYYY-MM-DD")}
+                    onChange={(e) => handleChange(e)}
+                    disabled={!editMode}
                   />
                 </DateInputWrapper>
                 -
@@ -133,8 +138,9 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                   <DateInput
                     type="date"
                     name="end"
-                    value={formData.end}
-                    onChange={handleChange}
+                    value={moment(formData.end).format("YYYY-MM-DD")}
+                    onChange={(e) => handleChange(e)}
+                    disabled={!editMode}
                   />
                 </DateInputWrapper>
               </FormGroup>
@@ -145,9 +151,9 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 <Input
                   type="text"
                   name="participant"
-                  placeholder="참여자 추가하기"
-                  value={formData.participant || ""}
+                  value={formData.participant}
                   onChange={handleChange}
+                  disabled={!editMode}
                 />
               </FormGroup>
               <FormGroup>
@@ -156,12 +162,25 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 </IconWrapper>
                 <TextArea
                   name="content"
-                  placeholder="메모 추가하기"
-                  value={formData.content || ""}
+                  value={formData.content}
                   onChange={handleChange}
+                  disabled={!editMode}
                 />
               </FormGroup>
-              <SubmitButton type="submit">저장</SubmitButton>
+              <ButtonContainer>
+                {editMode ? (
+                  <SubmitButton type="submit">저장</SubmitButton>
+                ) : (
+                  <EditButton type="button" onClick={handleEdit}>
+                    {/* <FontAwesomeIcon icon={faEdit} /> */}
+                    수정
+                  </EditButton>
+                )}
+                <DeleteButton type="button" onClick={handleDelete}>
+                  {/* <FontAwesomeIcon icon={faTrash} /> */}
+                  삭제
+                </DeleteButton>
+              </ButtonContainer>
             </Form>
           </ModalContent>
         </ModalWrapper>
@@ -170,4 +189,4 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
   );
 };
 
-export default EventModal;
+export default EditModal;

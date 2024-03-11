@@ -10,7 +10,7 @@ import {
 import { auth } from "@/firebase";
 // import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { login } from "@/app/_slice/slice";
+import { login } from "@/slice/slice";
 import { useRouter } from "next/navigation";
 
 const StyledContainer = styled.div`
