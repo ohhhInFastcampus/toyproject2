@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   if (pathname === "/login") {
     if (isLoggedIn) {
       // console.log("로그인상태입니다");
-      return NextResponse.redirect(new URL("/pay", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     } else {
       // console.log("로그인상태가 아닙니다");
       return NextResponse.next();
