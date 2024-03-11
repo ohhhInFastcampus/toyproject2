@@ -4,6 +4,10 @@ import Image from "next/image";
 import User from "./User";
 import styled from "styled-components";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
+import { UserType } from "../../type/UserType";
 
 const StyledLink = styled.div`
   display: flex;
@@ -44,18 +48,30 @@ const HeaderContainer = styled.div`
 `;
 
 const Header = () => {
-  //추후에 user data 삭제할 예정
-  const user = {
-    userId: "user1",
-    name: "최홍주",
-    profile: "/next.svg",
-  };
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userData: UserType = {
+          name: user.displayName || "",
+          email: user.email || "",
+          profile: user.photoURL || "",
+        };
+        setCurrentUser(userData);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <HeaderContainer>
       <Image src="/next.svg" alt="profile picture" width={100} height={100} />
       <Gnb />
-      <User {...user} />
+      {currentUser ? <User {...currentUser} /> : <div>Loading user...</div>}
     </HeaderContainer>
   );
 };
