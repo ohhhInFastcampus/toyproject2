@@ -2,7 +2,7 @@
 "use client";
 import { auth } from "@/firebase";
 import { useRouter } from "next/navigation";
-import { logout } from "./_slice/slice";
+import { logout } from "../slice/slice";
 import { useDispatch } from "react-redux";
 
 const useHandleLogout = () => {
