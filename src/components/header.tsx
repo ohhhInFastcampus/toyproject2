@@ -29,7 +29,7 @@ const Gnb = () => {
   return (
     <>
       <Link href="/" passHref>
-        <StyledLink>HOME</StyledLink>
+        <StyledLink>캘린더</StyledLink>
       </Link>
       <Link href="/pay" passHref>
         <StyledLink>급여내역</StyledLink>
