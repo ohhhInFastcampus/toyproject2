@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { z } from "zod";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 const firebaseConfigSchema = z.object({
   apiKey: z.string(),
@@ -25,3 +26,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestoreService = getFirestore(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
