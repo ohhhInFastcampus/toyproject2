@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
-import { login, logout } from "./_slice/slice";
+import { login, logout } from "@/slice/slice";
 import { auth } from "@/firebase";
 
 const useAuth = () => {
