@@ -11,7 +11,7 @@ export interface TokenType {
 }
 
 export interface AuthState {
-  photoURL: any;
+  name: string | null;
   email: string | null;
   uid: string | null;
   token: string | null;

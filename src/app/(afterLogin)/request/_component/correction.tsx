@@ -5,16 +5,14 @@ import styled from "styled-components";
 import Textarea from "@/components/Textarea";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import { RequestType } from "@/type/Request";
 
 const StyledRequest = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 20px;
-  padding: 80px;
-  gap: 60px;
+  padding: 5rem;
+  gap: 4rem;
   border: 1px solid #555;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -28,11 +26,11 @@ const StyledSelect = styled.select`
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
-  font-size: 16px;
+  font-size: 1rem;
   &:hover {
     border-color: #888;
   }
-  &:focus {
+  &:focus-visible {
     outline: none;
     border-color: #555;
   }
@@ -57,13 +55,20 @@ const Correction = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const docRef = doc(collection(db, "requests"));
-    await setDoc(docRef, {
-      month,
-      approver,
-      reason,
-      memo: text,
-      createdAt: serverTimestamp(),
-    });
+
+    try {
+      await setDoc(docRef, {
+        month,
+        approver,
+        reason,
+        memo: text,
+        createdAt: serverTimestamp(),
+      });
+      alert("신청 완료!");
+    } catch (error) {
+      console.error("신청 실패: ", error);
+      alert("신청 불가");
+    }
   };
 
   return (

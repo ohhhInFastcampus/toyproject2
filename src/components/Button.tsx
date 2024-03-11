@@ -1,12 +1,14 @@
-import React, { ButtonHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import React, { ButtonHTMLAttributes } from "react";
+import styled from "styled-components";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
+  Image?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
-  background-color: ${props => props.variant === 'secondary' ? '#555' : '#007bff'};
+  background-color: ${(props) =>
+    props.variant === "secondary" ? "#555" : "#007bff"};
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -15,7 +17,8 @@ const StyledButton = styled.button<ButtonProps>`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${props => props.variant === 'secondary' ? '#333' : '#0056b3'};
+    background-color: ${(props) =>
+      props.variant === "secondary" ? "#333" : "#0056b3"};
   }
 
   &:disabled {
@@ -24,15 +27,12 @@ const StyledButton = styled.button<ButtonProps>`
   }
 `;
 
-const Button = ({ variant = 'primary', children, ...rest }: ButtonProps) => {
-    return (
-        <StyledButton
-            {...rest}
-            variant={variant}
-        >
-            {children}
-        </StyledButton>
-    );
+const Button = ({ variant = "primary", children, ...rest }: ButtonProps) => {
+  return (
+    <StyledButton {...rest} variant={variant}>
+      {children}
+    </StyledButton>
+  );
 };
 
 export default Button;
