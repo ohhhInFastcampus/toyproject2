@@ -1,16 +1,16 @@
 "use client";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment from 'moment';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, {Draggable, DropArg,} from "@fullcalendar/interaction";
+import interactionPlugin, {DropArg,} from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { CalendarContainer } from "./_components/CalendarStyles"; 
 import EventModal from "./_components/AddEventModal";
 import { ScheduleType } from "../../../type/Schedule";
 import EditModal from "./_components/EditModal";
 import { db } from "@/firebase"; 
-import { collection, doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 const Calendar = () => {
   const [events, setEvents] = useState<ScheduleType[]>([]);
@@ -70,6 +70,7 @@ const Calendar = () => {
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
       id: `${new Date().getTime()}`,
+      allDay: true
     };
     setEvents([...events, event]);
     setShowModal(false);
