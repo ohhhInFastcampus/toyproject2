@@ -57,16 +57,13 @@ const Correction = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newSubmission: RequestType = {
-      id: doc(collection(db, "requests")).id,
+    const docRef = doc(collection(db, "requests"));
+    await setDoc(docRef, {
       month,
       approver,
       reason,
-      memo: text,
-    };
-
-    await setDoc(doc(db, "requests", newSubmission.id), newSubmission);
-    setSubmissions([...submissions, newSubmission]);
+      text,
+    });
   };
 
   return (

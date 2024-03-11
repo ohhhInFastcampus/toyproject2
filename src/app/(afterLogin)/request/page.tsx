@@ -1,9 +1,11 @@
 "use client";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Correction from "./_component/correction";
 import styled from "styled-components";
 import { RequestType } from "@/type/Request";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -29,6 +31,17 @@ const RequestPage = () => {
   const [requestModal, setRequestModal] = useState(false);
   const [submissions, setSubmissions] = useState<RequestType[]>([]);
 
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      const querySnapshot = await getDocs(collection(db, "requests"));
+      const submissionsData = querySnapshot.docs.map(
+        (doc) => doc.data() as RequestType
+      );
+      setSubmissions(submissionsData);
+    };
+
+    fetchSubmissions();
+  }, []);
   const handleOpenModal = () => {
     setRequestModal(true);
   };
@@ -38,8 +51,9 @@ const RequestPage = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div>
       <Button onClick={handleOpenModal}>정정 신청하기</Button>
+      <h2>정정 신청 내역</h2>
       {requestModal && (
         <ModalBackground onClick={handleCloseModal}>
           <ModalContainer onClick={(e) => e.stopPropagation()}>
