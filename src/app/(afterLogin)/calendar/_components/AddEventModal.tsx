@@ -39,7 +39,7 @@ interface Props {
 const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
   const [formData, setFormData] = useState<ScheduleType>({
     userId: userId,
-    id: '', // Use the provided id or generate UUID id || uuidv4()
+    id: id, // Use the provided id or generate UUID id || uuidv4()
     title: "",
     start: moment().format("YYYY-MM-DDTHH:mm:ss"),
     end: moment().format("YYYY-MM-DDTHH:mm:ss"),
@@ -72,13 +72,14 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
 
     const updatedFormData = {
       ...formData,
+      id: formData.id,
       backgroundColor: randomColor,
       start: moment(start).format(),
       end: moment(end).format(),
       textColor: "black",
       borderColor: "#DEDEDE",
     };
-    
+    console.log(formData.id)
     try {
       // Save event to Firestore with Firestore-generated ID
       const docRef = await addDoc(collection(db, "schedule"), updatedFormData);
@@ -89,6 +90,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
       onSubmit(newEvent); // Call onSubmit with newEvent including Firestore ID
       setFormData({
         userId: userId,
+        id: '',
         title: "",
         start: moment().format("YYYY-MM-DDTHH:mm:ss"),
         end: moment().format("YYYY-MM-DDTHH:mm:ss"),
@@ -98,12 +100,15 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
         textColor: "black",
         borderColor: "#DEDEDE",
       });
+      
       onClose();
     } catch (error) {
       console.error("Error adding new event:", error);
       // Handle error, maybe display a message to the user
     }
   };
+
+  
   //   // Save event to Firestore
   //   const docRef = doc(collection(db, "schedule"));
   //   await setDoc(docRef, updatedFormData);

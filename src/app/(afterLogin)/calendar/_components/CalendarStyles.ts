@@ -12,7 +12,6 @@ export const CalendarContainer = styled.div`
     display: flex;
     align-items: center; /* Align items vertically */
     justify-content: space-between; /* Distribute space evenly between items */
-
     button {
       background-color: #f0f0f0;
       color: #333;

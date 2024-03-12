@@ -54,7 +54,7 @@ const Calendar = () => {
         querySnapshot.forEach((doc) => {
           fetchedEvents.push(doc.data() as ScheduleType);
         });
-
+        console.log("Fetched Events:", fetchedEvents);
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -87,11 +87,12 @@ const Calendar = () => {
       start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
-      // id: newEvent.id || uuidv4(), // If id is not set, generate UUID
+      // id: newEvent.id,  // If id is not set, generate UUID
       textColor: "black",
       borderColor: "#DEDEDE",
     };
     setEvents([...events, event]);
+    // setEvents(prevEvents => [...prevEvents, event]);
     setShowModal(false);
     setNewEvent({
       userId: userId,
@@ -166,7 +167,7 @@ const Calendar = () => {
 
     const event: ScheduleType = {
       ...formData,
-      // id: newEvent.id || uuidv4(), // If id is not set, generate UUID
+      id: formData.id,
       start: start.toISOString(),
       end: end.toISOString(),
       textColor: "black",
@@ -176,15 +177,15 @@ const Calendar = () => {
     setEvents((prevEvents) => [...prevEvents, event]);
     setShowModal(false);
   }
-
+  // console.log("Events:", events);
   return (
     <>
       <CalendarContainer>
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
           headerToolbar={{
-            left: "prev,next today",
-            center: "title",
+            left: "today",
+            center: "prev title next",
             right: "dayGridMonth,timeGridWeek",
           }}
           events={events}

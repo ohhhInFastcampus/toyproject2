@@ -13,6 +13,9 @@ import {
   SubmitButton,
   eventColors,
   DateInputWrapper,
+  DeleteButton,
+  ButtonContainer,
+  EditButton,
 } from './EventModalStyles'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -47,6 +50,7 @@ const EditModal = ({
   userId,
 }: Props) => {
   const [formData, setFormData] = useState<ScheduleType>(event);
+  const [editMode, setEditMode] = useState(false);
 
   // Updates form data when the event prop changes
   useEffect(() => {
@@ -62,6 +66,10 @@ const EditModal = ({
       ...prevData,
       [name]: value,
     }));
+  };
+  const handleEdit = () => {
+    setEditMode(true);
+    console.log(formData);
   };
 
   // Handles form submission
@@ -84,17 +92,17 @@ const EditModal = ({
     onClose();
   };
     
-    // Handle event deletion
-    const handleDelete = async () => {
-      console.log(formData.id)
-      if (formData.id) { // Check if formData.id is defined
-        const docRef = doc(db, "schedule", formData.id);
-        await deleteDoc(docRef);
-        onDelete();
-        onClose();
-      }
-      console.log(formData)
-    };
+  // Handle event deletion
+  const handleDelete = async () => {
+    console.log(formData.id)
+    if (formData.id) { // Check if formData.id is defined
+      const docRef = doc(db, "schedule", formData.id);
+      await deleteDoc(docRef);
+      onDelete();
+      onClose();
+    }
+    console.log(formData)
+  };
 
   return (
     <>
@@ -113,6 +121,7 @@ const EditModal = ({
                   placeholder="제목"
                   value={formData.title}
                   onChange={handleChange}
+                  disabled={!editMode}
                 />
               </FormGroup>
               <FormGroup>
@@ -127,6 +136,7 @@ const EditModal = ({
                       "YYYY-MM-DDTHH:mm:ss"
                     )}
                     onChange={handleChange}
+                    disabled={!editMode}
                   />
                 </DateInputWrapper>
                 -
@@ -138,6 +148,7 @@ const EditModal = ({
                       "YYYY-MM-DDTHH:mm:ss"
                     )}
                     onChange={handleChange}
+                    disabled={!editMode}
                   />
                 </DateInputWrapper>
               </FormGroup>
@@ -151,6 +162,7 @@ const EditModal = ({
                   placeholder="참여자 추가하기"
                   value={formData.participant || ""}
                   onChange={handleChange}
+                  disabled={!editMode}
                 />
               </FormGroup>
               <FormGroup>
@@ -162,12 +174,24 @@ const EditModal = ({
                   placeholder="메모 추가하기"
                   value={formData.content || ""}
                   onChange={handleChange}
+                  disabled={!editMode}
                 />
               </FormGroup>
-              <SubmitButton type="submit">저장</SubmitButton>
+              <ButtonContainer>
+                {editMode ? (
+                  <SubmitButton type="submit">저장</SubmitButton>
+                ) : (
+                  <EditButton type="button" onClick={handleEdit}>
+                    {/* <FontAwesomeIcon icon={faEdit} /> */}
+                    수정
+                  </EditButton>
+                )}
+                <DeleteButton type="button" onClick={handleDelete}>
+                  {/* <FontAwesomeIcon icon={faTrash} /> */}
+                  삭제
+                </DeleteButton>
+              </ButtonContainer>
             </Form>
-            {/* Button to delete the current event */}
-            <SubmitButton onClick={handleDelete}>삭제</SubmitButton>
           </ModalContent>
         </ModalWrapper>
       )}
