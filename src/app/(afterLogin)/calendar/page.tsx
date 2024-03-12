@@ -115,10 +115,10 @@ const Calendar = () => {
       start: clickedEvent.event.start,
       end: clickedEvent.event.end,
       content: clickedEvent.event.extendedProps?.content || "", // Use default value if undefined
-      participant: clickedEvent.event.extendedProps?.participant || "", // Use default value if undefined
-      backgroundColor: clickedEvent.event.backgroundColor || "", // Use default value if undefined
-      textColor: clickedEvent.event.textColor || "", // Use default value if undefined
-      borderColor: clickedEvent.event.borderColor || "", // Use default value if undefined
+      participant: clickedEvent.event.extendedProps?.participant || "", 
+      backgroundColor: clickedEvent.event.backgroundColor || "", 
+      textColor: clickedEvent.event.textColor || "", 
+      borderColor: clickedEvent.event.borderColor || "", 
     };
     setNewEvent(event);
     setShowEditModal(true);
