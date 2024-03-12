@@ -57,7 +57,8 @@ const PayDetail = ({ pay, resetTarget }: PayDetailProps) => {
         <DeleteButton
           onClick={() => {
             resetTarget();
-          }}>
+          }}
+        >
           닫기
         </DeleteButton>
       </ButtonWrap>

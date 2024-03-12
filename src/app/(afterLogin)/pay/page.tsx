@@ -4,13 +4,24 @@ import Card from "@/components/PayCard";
 import { PayType } from "@/type/Pay";
 import PayDetail from "@/components/PayDetail";
 import { useState } from "react";
+import theme from "@/styles/theme";
 
 const PayPageStyle = styled.div`
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: center;
+  flex-direction: column;
   min-height: 100vh;
-  gap: 10px;
+  background-color: ${theme.colors.white};
+  border-radius: ${theme.border.radius};
+`;
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 30px;
 `;
 const CardWrapper = styled.div`
   width: 830px;
@@ -19,6 +30,7 @@ const CardWrapper = styled.div`
   justify-content: flex-start;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 30px;
 `;
 
 const mockData: PayType[] = [
@@ -81,6 +93,9 @@ const PayPage = () => {
   };
   return (
     <PayPageStyle>
+      <Title>
+        <h2>급여내역</h2>
+      </Title>
       <CardWrapper>
         {mockData.map((item) => {
           return <Card key={item.id} pay={item} setTarget={settingTarget} />;
