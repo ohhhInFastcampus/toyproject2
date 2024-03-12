@@ -4,28 +4,36 @@ import styled from "styled-components";
 
 const PopupContainer = styled.div`
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  background-color: ${theme.colors.lightGrey};
-  color: white;
-  border-radius: ${theme.border.radius};
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  top: 130%;
+  left: 60%;
+  transform: translateX(-50%);
+  width: 100px;
 `;
 
 const LogoutButton = styled.button`
+  position: relative;
   background-color: ${theme.colors.darkGray};
   color: white;
   border: none;
   border-radius: ${theme.border.radius};
   padding: 10px 20px;
   cursor: pointer;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 65%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent ${theme.colors.darkGray} transparent;
+  }
 `;
 interface LogoutProps {
   onLogout: () => void;

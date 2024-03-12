@@ -26,9 +26,10 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 30px;
+  padding-left: 3rem;
   width: 100%;
-  height: 5rem;
+  height: 4rem;
+  border-bottom: 1px solid #e0e0e0;
 `;
 
 const UserContainer = styled.div`
@@ -37,7 +38,7 @@ const UserContainer = styled.div`
   justify-content: center;
   position: relative;
   margin-right: 5rem;
-  background-color: ${theme.colors.lightGrey};
+  background-color: #e0e0e0;
   border-radius: ${theme.border.radius};
   width: 60px;
   padding: 5px;
