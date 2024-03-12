@@ -36,7 +36,10 @@ export const CalendarContainer = styled.div`
   .fc-next-button {
     font-size: 10px; 
   }
-
+  .fc-dayGridMonth-button,
+  .fc-timeGridWeek-button {
+    font-size: 12px;
+  }
 
 .fc-event-time {
   display: none;
