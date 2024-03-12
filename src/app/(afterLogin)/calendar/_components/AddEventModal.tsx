@@ -108,28 +108,6 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     }
   };
 
-  
-  //   // Save event to Firestore
-  //   const docRef = doc(collection(db, "schedule"));
-  //   await setDoc(docRef, updatedFormData);
-
-  //   console.log("added event:", updatedFormData);
-
-  //   onSubmit(updatedFormData); // Call onSubmit with updatedFormData
-  //   setFormData({
-  //     userId: userId,
-  //     id: id || uuidv4(), // Generate new UUID for next event
-  //     title: "",
-  //     start: moment().format("YYYY-MM-DDTHH:mm:ss"),
-  //     end: moment().format("YYYY-MM-DDTHH:mm:ss"),
-  //     content: "",
-  //     participant: "",
-  //     backgroundColor: "",
-  //     textColor: "black",
-  //     borderColor: "#DEDEDE",
-  //   });
-  //   onClose();
-  // };
 
   return (
     <>
