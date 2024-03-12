@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const PageContainer = styled.div`
   min-height: 100vh;
+  width: 100%;
   background-color: ${theme.colors.lightGrey};
   padding: 3rem;
 `;
