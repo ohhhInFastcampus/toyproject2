@@ -7,7 +7,7 @@ const theme = {
     brightBlue: "#F1F7FE",
   },
   border: {
-    radius: "10rem",
+    radius: "0.9em",
   },
 };
 
