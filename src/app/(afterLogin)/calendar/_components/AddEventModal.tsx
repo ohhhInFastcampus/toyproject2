@@ -6,6 +6,7 @@ import {
   Form,
   FormGroup,
   IconWrapper,
+  InputWrapper,
   TitleInput,
   Input,
   DateInput,
@@ -19,38 +20,37 @@ import {
   faClock,
   faUsers,
   faNoteSticky,
+  faChevronRight,
   faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/type/Schedule";
-import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
-
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  userId: string;
-  id: string; // Change the id type to string
+  newEvent: ScheduleType;
 }
 
-const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
+const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
+  const email = useSelector((state: RootState) => state.auth.email);
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: userId,
-    id: id, // Use the provided id or generate UUID id || uuidv4()
+    userId: email ?? "",
+    id: "",
     title: "",
-    start: moment().format("YYYY-MM-DDTHH:mm:ss"),
-    end: moment().format("YYYY-MM-DDTHH:mm:ss"),
+    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
+    end: moment().format("YYYY-MM-DD"),
     content: "",
     participant: "",
     backgroundColor: "",
-    textColor: "black",
-    borderColor: "#DEDEDE",
   });
 
-  // Updates the form data when input fields change
+  // 입력 값 변경 처리
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -61,10 +61,11 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     }));
   };
 
-  // Handles form submission
+  // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 이벤트 색상 랜덤 선택
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
@@ -72,64 +73,28 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
 
     const updatedFormData = {
       ...formData,
-      id: formData.id,
       backgroundColor: randomColor,
       start: moment(start).format(),
       end: moment(end).format(),
       textColor: "black",
       borderColor: "#DEDEDE",
     };
-    console.log(formData.id)
-    try {
-      // Save event to Firestore with Firestore-generated ID
-      const docRef = await addDoc(collection(db, "schedule"), updatedFormData);
-      const newEvent = { ...updatedFormData, id: docRef.id };
-
-      console.log("added event:", newEvent);
-
-      onSubmit(newEvent); // Call onSubmit with newEvent including Firestore ID
-      setFormData({
-        userId: userId,
-        id: '',
-        title: "",
-        start: moment().format("YYYY-MM-DDTHH:mm:ss"),
-        end: moment().format("YYYY-MM-DDTHH:mm:ss"),
-        content: "",
-        participant: "",
-        backgroundColor: "",
-        textColor: "black",
-        borderColor: "#DEDEDE",
-      });
-      
-      onClose();
-    } catch (error) {
-      console.error("Error adding new event:", error);
-      // Handle error, maybe display a message to the user
-    }
+    setFormData(updatedFormData);
+    onSubmit(updatedFormData);
+    onClose();
+    console.log(updatedFormData);
+    const docRef = doc(collection(db, "schedule"));
+    await setDoc(docRef, {
+      userId: updatedFormData.userId,
+      id: updatedFormData.id,
+      title: updatedFormData.title,
+      start: updatedFormData.start,
+      end: updatedFormData.end,
+      content: updatedFormData.content,
+      participant: updatedFormData.participant,
+      backgroundColor: updatedFormData.backgroundColor,
+    });
   };
-
-  
-  //   // Save event to Firestore
-  //   const docRef = doc(collection(db, "schedule"));
-  //   await setDoc(docRef, updatedFormData);
-
-  //   console.log("added event:", updatedFormData);
-
-  //   onSubmit(updatedFormData); // Call onSubmit with updatedFormData
-  //   setFormData({
-  //     userId: userId,
-  //     id: id || uuidv4(), // Generate new UUID for next event
-  //     title: "",
-  //     start: moment().format("YYYY-MM-DDTHH:mm:ss"),
-  //     end: moment().format("YYYY-MM-DDTHH:mm:ss"),
-  //     content: "",
-  //     participant: "",
-  //     backgroundColor: "",
-  //     textColor: "black",
-  //     borderColor: "#DEDEDE",
-  //   });
-  //   onClose();
-  // };
 
   return (
     <>
@@ -156,22 +121,18 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="datetime-local"
+                    type="date"
                     name="start"
-                    value={moment(formData.start).format(
-                      "YYYY-MM-DDTHH:mm:ss"
-                    )}
+                    value={formData.start}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="datetime-local"
+                    type="date"
                     name="end"
-                    value={moment(formData.end).format(
-                      "YYYY-MM-DDTHH:mm:ss"
-                    )}
+                    value={formData.end}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>
