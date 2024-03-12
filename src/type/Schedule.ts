@@ -1,13 +1,11 @@
 export interface ScheduleType {
     userId: string,
-    id?: string,
+    id: string,
     title: string,
     start: string,
     end: string,
     content: string,
     participant: string,
-    backgroundColor: string,
-    textColor: string,
-    borderColor: string
+    backgroundColor: string
     allDay?: boolean,
 }

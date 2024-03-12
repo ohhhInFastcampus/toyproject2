@@ -7,6 +7,14 @@ import { RequestType } from "@/type/Request";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import Image from "next/image";
+import theme from "@/styles/theme";
+
+const Box = styled.div`
+  background-color: ${theme.colors.white};
+  padding-top: 1em;
+  padding-bottom: 5em;
+  border-radius: ${theme.border.radius};
+`;
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -34,12 +42,15 @@ const ModalContainer = styled.div`
 `;
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   margin-right: 10rem;
 `;
+
 const Title = styled.div`
   display: flex;
   justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
 `;
 
 const Container = styled.div`
@@ -51,28 +62,41 @@ const Container = styled.div`
 const StyledTable = styled.table`
   width: 80%;
   margin-top: 2rem;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border-radius: ${theme.border.radius};
 `;
 
 // 테이블 헤더 스타일
 const StyledThead = styled.thead`
-  background-color: #1f1f1f;
+  background-color: ${theme.colors.darkGray};
   color: white;
-  border-radius: 10px;
+  text-align: center;
+
+  & tr:first-child th:first-child {
+    border-top-left-radius: ${theme.border.radius};
+  }
+
+  & tr:first-child th:last-child {
+    border-top-right-radius: ${theme.border.radius};
+  }
 `;
 
 // 테이블 행 스타일
 const StyledTr = styled.tr`
-  &:nth-child(even) {
-    background-color: #f2f2f2;
+  &:last-child td:first-child {
+    border-bottom-left-radius: ${theme.border.radius};
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: ${theme.border.radius};
   }
 `;
 
 // 테이블 헤더 셀 스타일
 const StyledTh = styled.th`
   padding: 1rem 1.1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -80,6 +104,7 @@ const StyledTh = styled.th`
 const StyledTd = styled.td`
   padding: 1rem 1.1rem;
   border-bottom: 1px solid #ddd;
+  text-align: center;
 `;
 
 const RequestPage = () => {
@@ -108,7 +133,7 @@ const RequestPage = () => {
   };
 
   return (
-    <div>
+    <Box>
       <ButtonContainer>
         <Button onClick={handleOpenModal}>정정 신청하기</Button>{" "}
       </ButtonContainer>
@@ -149,7 +174,7 @@ const RequestPage = () => {
           </tbody>
         </StyledTable>
       </Container>
-    </div>
+    </Box>
   );
 };
 export default RequestPage;
