@@ -16,4 +16,5 @@ export interface AuthState {
   uid: string | null;
   token: string | null;
   photoURL: string | null;
+  isLoading: boolean;
 }

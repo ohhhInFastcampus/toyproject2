@@ -15,22 +15,26 @@ const UserContainer = styled.div`
   gap: 1rem;
   padding: 5px;
 `;
-
 const User = () => {
   const [clientPhotoURL, setClientPhotoURL] = useState<string | null>(null);
   const photoURL = useSelector((state: RootState) => state.auth.photoURL);
 
   useEffect(() => {
-    setClientPhotoURL(photoURL);
+    // FIXME: `photoURL`이 "null"인 경우가 있음
+    if (photoURL && photoURL !== "null") {
+      setClientPhotoURL(photoURL);
+    }
   }, [photoURL]);
 
   return (
     <UserContainer>
-      {clientPhotoURL && (
-        <Image src={clientPhotoURL} alt="user profile" width={25} height={25} />
-      )}
+      <Image
+        src={clientPhotoURL ?? "/xmark.svg"}
+        alt="user profile"
+        width={25}
+        height={25}
+      />
     </UserContainer>
   );
 };
-
 export default User;

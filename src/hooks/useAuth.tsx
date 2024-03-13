@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
+import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
-import { login, logout } from "@/slice/slice";
+import { login, logout, setLoadingState } from "@/slice/slice";
 import { auth } from "@/firebase";
 import fetchImgFromFireStorage from "@/utils/getUserImage";
 
 const useAuth = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dispatch = useDispatch();
+  const segments = useSelectedLayoutSegment();
 
   useEffect(() => {
     (async () => {
+      if (!(segments == "login")) {
+        dispatch(setLoadingState({ isLoading: true }));
+      }
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
           // 사용자가 인증되지 않았을 경우
@@ -34,14 +37,17 @@ const useAuth = () => {
           };
 
           dispatch(login(authConstructor));
+
           setIsAuthenticated(true);
         }
-        setIsLoading(false);
+        await setTimeout(() => {}, 5000);
+
+        dispatch(setLoadingState({ isLoading: false }));
       });
     })();
-  }, [router, dispatch]);
+  }, [router, dispatch, segments]);
 
-  return { isLoading, isAuthenticated };
+  return { isAuthenticated };
 };
 
 export default useAuth;
