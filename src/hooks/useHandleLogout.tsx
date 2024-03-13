@@ -1,4 +1,3 @@
-// useHandleLogout 훅 수정
 "use client";
 import { auth } from "@/firebase";
 import { useRouter } from "next/navigation";
