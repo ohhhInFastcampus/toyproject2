@@ -14,23 +14,30 @@ const PayPageStyle = styled.div`
   min-height: 100vh;
   background-color: ${theme.colors.white};
   border-radius: ${theme.border.radius};
+  margin-left: auto; /* Center horizontally */
+  margin-right: 100px; /* Center horizontally */
 `;
+
 const Title = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
   font-weight: 700;
-  margin-top: 30px;
+  margin-top: 40px;
+  margin-bottom: 20px;
 `;
+
 const CardWrapper = styled.div`
-  width: 830px;
+  width: 100%; 
+  max-width: 1200px; 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: space-between; 
+  gap: 20px; 
   flex-wrap: wrap;
   margin-top: 30px;
+  margin-bottom: 0px;
 `;
 
 const mockData: PayType[] = [
@@ -75,6 +82,7 @@ const mockData: PayType[] = [
     total: "10000",
   },
 ];
+
 const reset = {
   deductions: "",
   earnings: "",
@@ -83,14 +91,18 @@ const reset = {
   total: "",
   userId: "",
 };
+
 const PayPage = () => {
   const [target, setTarget] = useState<PayType>(reset);
+
   const settingTarget = (pay: PayType) => {
     setTarget(pay);
   };
+
   const resetTarget = () => {
     setTarget(reset);
   };
+
   return (
     <PayPageStyle>
       <Title>
@@ -105,4 +117,5 @@ const PayPage = () => {
     </PayPageStyle>
   );
 };
+
 export default PayPage;
