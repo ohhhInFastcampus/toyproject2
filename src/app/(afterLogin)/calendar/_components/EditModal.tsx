@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ScheduleType } from "@/type/Schedule";
 import {
   ModalWrapper,
   ModalContent,
@@ -7,42 +6,42 @@ import {
   Form,
   FormGroup,
   IconWrapper,
+  TitleInput,
   Input,
-  Text,
+  DateInput,
   TextArea,
   SubmitButton,
-  Title,
-  EditButton,
-  DeleteButton,
+  eventColors,
   DateInputWrapper,
-  DateInput,
+  DeleteButton,
   ButtonContainer,
-  TitleInput,
-} from "./EventModalStyles";
+  EditButton,
+} from './EventModalStyles'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCalendarCheck,
-  faChevronRight,
   faClock,
-  faEdit,
-  faNoteSticky,
-  faTrash,
   faUsers,
+  faNoteSticky,
+  faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/type/Schedule";
-interface EditModalProps {
+
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "@/firebase";
+
+interface Props {
   isOpen: boolean;
-  event: ScheduleType;
   onClose: () => void;
-  onDelete: () => void;
   onSubmit: (formData: ScheduleType) => void;
+  onDelete: () => void;
+  event: ScheduleType;
+  userId: string;
+  id: string;
 }
 
 const EditModal = ({
   isOpen,
-  event,
-  onDelete,
   onClose,
   onSubmit,
   onDelete, 
@@ -64,6 +63,7 @@ const EditModal = ({
   });
   const [editMode, setEditMode] = useState(false);
 
+  // Updates form data when the event prop changes
   useEffect(() => {
     setFormData({
       userId: userId,
@@ -79,6 +79,7 @@ const EditModal = ({
     });
   }, [event, userId]);
 
+  // Updates the form data when input fields change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -92,8 +93,13 @@ const EditModal = ({
       [name]: updatedValue,
     }));
   };
+  const handleEdit = () => {
+    setEditMode(true);
+    console.log(formData);
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Handles form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Convert start and end to formatted strings if changed, otherwise keep as is
@@ -138,12 +144,7 @@ const EditModal = ({
     } catch (error) {
       console.error("Error deleting event:", error);
     }
-
   };
-
-  if (!event) {
-    return null;
-  }
 
   return (
     <>
@@ -156,15 +157,14 @@ const EditModal = ({
                 <IconWrapper>
                   <FontAwesomeIcon icon={faCalendarCheck} />
                 </IconWrapper>
-                <Title>
-                  <TitleInput
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    disabled={!editMode}
-                  />
-                </Title>
+                <TitleInput
+                  type="text"
+                  name="title"
+                  placeholder="제목"
+                  value={formData.title}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                />
               </FormGroup>
               <FormGroup>
                 <IconWrapper>
@@ -172,20 +172,24 @@ const EditModal = ({
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="start"
-                    value={moment(formData.start).format("YYYY-MM-DD")}
-                    onChange={(e) => handleChange(e)}
+                    value={moment(formData.start).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
+                    onChange={handleChange}
                     disabled={!editMode}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="end"
-                    value={moment(formData.end).format("YYYY-MM-DD")}
-                    onChange={(e) => handleChange(e)}
+                    value={moment(formData.end).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
+                    onChange={handleChange}
                     disabled={!editMode}
                   />
                 </DateInputWrapper>
@@ -197,7 +201,8 @@ const EditModal = ({
                 <Input
                   type="text"
                   name="participant"
-                  value={formData.participant}
+                  placeholder="참여자 추가하기"
+                  value={formData.participant || ""}
                   onChange={handleChange}
                   disabled={!editMode}
                 />
@@ -208,7 +213,8 @@ const EditModal = ({
                 </IconWrapper>
                 <TextArea
                   name="content"
-                  value={formData.content}
+                  placeholder="메모 추가하기"
+                  value={formData.content || ""}
                   onChange={handleChange}
                   disabled={!editMode}
                 />
