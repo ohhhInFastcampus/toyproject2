@@ -1,5 +1,4 @@
 import { PayType } from "../type/Pay";
-import Button from "@/components/Button";
 import styled from "styled-components";
 
 interface PayDetailProps {
@@ -11,27 +10,38 @@ const NonDetail = styled.div`
   width: 200px;
   height: 100%;
 `;
+
 const PayDetailStyle = styled.div`
   width: 250px;
-  height: 100%;
+  height: 80%;
   border: 1px solid #ddd;
   padding: 15px;
   border-radius: 8px;
   flex: 0 1 auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  background-color: white;
+  z-index: 999; 
 `;
+
 const TitleStyle = styled.div`
   font-weight: bold;
   margin-bottom: 10px;
 `;
+
 const ContentStyle = styled.div`
   border-bottom: 1px solid #ddd;
   padding-top: 10px;
   padding-bottom: 5px;
 `;
+
 const ButtonWrap = styled.div`
   width: 100%;
   margin-top: 20px;
 `;
+
 const DeleteButton = styled.button`
   width: 100%;
   border: 1px solid black;
@@ -39,12 +49,14 @@ const DeleteButton = styled.button`
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
+
   transition: all 0.2s;
   &:hover {
     background: black;
     color: white;
   }
 `;
+
 const PayDetail = ({ pay, resetTarget }: PayDetailProps) => {
   return pay.id === "" ? (
     <NonDetail></NonDetail>
@@ -57,7 +69,8 @@ const PayDetail = ({ pay, resetTarget }: PayDetailProps) => {
         <DeleteButton
           onClick={() => {
             resetTarget();
-          }}>
+          }}
+        >
           닫기
         </DeleteButton>
       </ButtonWrap>
