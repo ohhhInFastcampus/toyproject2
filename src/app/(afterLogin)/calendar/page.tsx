@@ -1,10 +1,9 @@
 'use client'
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, {
-  Draggable,
   DropArg,
 } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -13,13 +12,7 @@ import EventModal from "./_components/AddEventModal";
 import { ScheduleType } from "@/type/Schedule";
 import EditModal from "./_components/EditModal";
 import { db } from "@/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
+import { collection,getDocs,
 } from "firebase/firestore";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
@@ -52,25 +45,32 @@ const Calendar = () => {
 
         const fetchedEvents: ScheduleType[] = [];
         querySnapshot.forEach((doc) => {
-          fetchedEvents.push(doc.data() as ScheduleType);
+          const event = doc.data() as ScheduleType;
+          // Convert start and end strings to Date objects
+          event.start = moment(event.start).format("YYYY-MM-DDTHH:mm:ss");
+          event.end = moment(event.end).format("YYYY-MM-DDTHH:mm:ss");
+          fetchedEvents.push(event);
         });
-        console.log("Fetched Events:", fetchedEvents);
+
         setEvents(fetchedEvents);
+        console.log(fetchedEvents)
       } catch (error) {
         console.error("Error fetching events:", error);
       }
     };
 
     fetchEvents();
+
   }, []);
 
   function handleDateClick(arg: { date: Date }) {
+    const clickedDate = moment(arg.date).format("YYYY-MM-DDTHH:mm:ss");
     const newEvent: ScheduleType = {
       userId: userId,
       id: "", // Generate UUID uuidv4()
       title: "",
-      start: "",
-      end: "",
+      start: clickedDate, // Use the clicked date as a string
+      end: clickedDate, // Use the same clicked date for start and end as string
       content: "",
       participant: "",
       backgroundColor: "",
@@ -87,12 +87,10 @@ const Calendar = () => {
       start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
-      // id: newEvent.id,  // If id is not set, generate UUID
       textColor: "black",
       borderColor: "#DEDEDE",
     };
     setEvents([...events, event]);
-    // setEvents(prevEvents => [...prevEvents, event]);
     setShowModal(false);
     setNewEvent({
       userId: userId,
@@ -115,22 +113,20 @@ const Calendar = () => {
       title: clickedEvent.event.title,
       start: clickedEvent.event.start,
       end: clickedEvent.event.end,
-      content: clickedEvent.event.extendedProps?.content || "", // Use default value if undefined
-      participant: clickedEvent.event.extendedProps?.participant || "", 
-      backgroundColor: clickedEvent.event.backgroundColor || "", 
-      textColor: clickedEvent.event.textColor || "", 
-      borderColor: clickedEvent.event.borderColor || "", 
+      content: clickedEvent.event.extendedProps?.content || "",
+      participant: clickedEvent.event.extendedProps?.participant || "",
+      backgroundColor: clickedEvent.event.backgroundColor || "",
+      textColor: clickedEvent.event.textColor || "",
+      borderColor: clickedEvent.event.borderColor || "",
     };
     setNewEvent(event);
     setShowEditModal(true);
-    console.log(event)
   }
 
   function handleDeleteEvent() {
     const updatedEvents = events.filter((event) => event.id !== newEvent.id);
     setEvents(updatedEvents);
     setShowEditModal(false);
-
   }
 
   function handleEditEvent(formData: ScheduleType) {
@@ -162,14 +158,14 @@ const Calendar = () => {
   }
 
   function handleFormSubmit(formData: ScheduleType) {
-    const start = moment(formData.start).toDate();
-    const end = moment(formData.end).toDate();
+    const start = moment(formData.start).format("YYYY-MM-DDTHH:mm:ss");
+    const end = moment(formData.end).format("YYYY-MM-DDTHH:mm:ss");
 
     const event: ScheduleType = {
       ...formData,
-      id: formData.id,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      id: formData.id || uuidv4(), // Generate UUID if ID doesn't exist
+      start: start,
+      end: end,
       textColor: "black",
       borderColor: "#DEDEDE",
     };
@@ -177,7 +173,7 @@ const Calendar = () => {
     setEvents((prevEvents) => [...prevEvents, event]);
     setShowModal(false);
   }
-  // console.log("Events:", events);
+
   return (
     <>
       <CalendarContainer>

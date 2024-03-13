@@ -9,5 +9,4 @@ export interface ScheduleType {
     backgroundColor: string,
     textColor: string,
     borderColor: string
-    allDay?: boolean,
 }
