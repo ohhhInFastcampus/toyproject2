@@ -4,12 +4,11 @@ import Image from "next/image";
 import User from "./User";
 import styled from "styled-components";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { UserType } from "@/type/UserType";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/firebase";
+import { useState } from "react";
 import theme from "@/styles/theme";
 import { Logout } from "./Logout";
+import useHandleLogout from "@/hooks/useHandleLogout";
+import { useAuthContext } from "@/app/UseAuthProvider";
 
 const StyledLink = styled.div`
   &:hover {
@@ -74,38 +73,16 @@ const Gnb = () => {
 };
 
 const Header = () => {
-  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+  const { isAuthenticated } = useAuthContext() ?? { isAuthenticated: false };
   const [logout, setLogout] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userData: UserType = {
-          name: user.displayName || "",
-          email: user.email || "",
-          profile: user.photoURL || "",
-        };
-        setCurrentUser(userData);
-      } else {
-        setCurrentUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      setCurrentUser(null);
-      setLogout(false);
-    });
-  };
+  const handleLogout = useHandleLogout();
 
   return (
     <HeaderContainer>
       <Image src="/logo.png" alt="logo" width={80} height={40} />
       <Gnb />
-      {currentUser ? (
+      {isAuthenticated ? (
         <UserContainer onClick={() => setLogout(!logout)}>
           <User />
           {logout && <Logout onLogout={handleLogout} />}

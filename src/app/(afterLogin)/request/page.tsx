@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Correction from "./_component/correction";
 import styled from "styled-components";
 import { RequestType } from "@/type/Request";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import Image from "next/image";
 import theme from "@/styles/theme";
@@ -112,16 +112,19 @@ const RequestPage = () => {
   const [submissions, setSubmissions] = useState<RequestType[]>([]);
 
   useEffect(() => {
-    const fetchSubmissions = async () => {
-      const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
+    const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const submissionsData = querySnapshot.docs.map(
-        (doc) => doc.data() as RequestType
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as RequestType)
       );
       setSubmissions(submissionsData);
-    };
+    });
 
-    fetchSubmissions();
+    return () => unsubscribe();
   }, []);
 
   const handleOpenModal = () => {
