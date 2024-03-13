@@ -20,7 +20,7 @@ const CardDate = styled.p`
   color: #666;
   margin-bottom: 10px;
 `;
-const CardContent = styled.p`
+const CardContent = styled.div`
   display: flex;
   justify-content: start;
   text-align: start;
@@ -41,16 +41,16 @@ const Card = ({ pay, setTarget }: CardProps) => {
       <CardTitle>{payMonth + 1}월</CardTitle>
       <CardDate>{pay.paymentDate} 지급</CardDate>
       <CardContent>
-        <div>지급총액</div>
-        <div>{pay.total}</div>
+        <p>지급총액</p>
+        <p>{pay.total}</p>
       </CardContent>
       <CardContent>
-        <div>공제총액</div>
-        <div>{pay.deductions}</div>
+        <p>공제총액</p>
+        <p>{pay.deductions}</p>
       </CardContent>
       <CardContent>
-        <div>지급총액</div>
-        <div>{pay.earnings}</div>
+        <p>지급총액</p>
+        <p>{pay.earnings}</p>
       </CardContent>
       <Button
         onClick={() => {
