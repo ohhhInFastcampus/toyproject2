@@ -6,7 +6,6 @@ import {
   Form,
   FormGroup,
   IconWrapper,
-  InputWrapper,
   TitleInput,
   Input,
   DateInput,
@@ -20,37 +19,37 @@ import {
   faClock,
   faUsers,
   faNoteSticky,
-  faChevronRight,
   faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/type/Schedule";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  newEvent: ScheduleType;
+  userId: string;
+  id: string; // Change the id type to string
 }
 
-const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
-  const email = useSelector((state: RootState) => state.auth.email);
+const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
   const [formData, setFormData] = useState<ScheduleType>({
-    userId: email ?? "",
-    id: "",
+    userId: userId,
+    id: id || uuidv4(), // Use the provided id or generate UUID id || uuidv4()
     title: "",
-    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
-    end: moment().format("YYYY-MM-DD"),
+    start: moment().format("YYYY-MM-DDTHH:mm:ss"),
+    end: moment().format("YYYY-MM-DDTHH:mm:ss"),
     content: "",
     participant: "",
     backgroundColor: "",
+    textColor: "black",
+    borderColor: "#DEDEDE",
   });
 
-  // 입력 값 변경 처리
+  // Updates the form data when input fields change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -61,16 +60,15 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
     }));
   };
 
-  // 폼 제출 처리
+  // Handles form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // 이벤트 색상 랜덤 선택
+  
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
     const end = new Date(formData.end);
-
+  
     const updatedFormData = {
       ...formData,
       backgroundColor: randomColor,
@@ -79,22 +77,24 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
       textColor: "black",
       borderColor: "#DEDEDE",
     };
-    setFormData(updatedFormData);
-    onSubmit(updatedFormData);
-    onClose();
-    console.log(updatedFormData);
-    const docRef = doc(collection(db, "schedule"));
-    await setDoc(docRef, {
-      userId: updatedFormData.userId,
-      id: updatedFormData.id,
-      title: updatedFormData.title,
-      start: updatedFormData.start,
-      end: updatedFormData.end,
-      content: updatedFormData.content,
-      participant: updatedFormData.participant,
-      backgroundColor: updatedFormData.backgroundColor,
-    });
+  
+    try {
+      // If formData.id exists, update the existing document
+      if (formData.id) {
+        const docRef = doc(db, "schedule", formData.id);
+        await setDoc(docRef, updatedFormData); // Use setDoc for updating
+        console.log("Updated event with ID:", formData.id);
+        onSubmit(updatedFormData); // Call onSubmit with updated form data
+        onClose(); // Close the modal
+      } else {
+        console.error("No ID found for event:", formData);
+      }
+    } catch (error) {
+      console.error("Error updating event:", error);
+      // Handle error, maybe display a message to the user
+    }
   };
+
 
   return (
     <>
@@ -121,18 +121,22 @@ const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="start"
-                    value={formData.start}
+                    value={moment(formData.start).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="date"
+                    type="datetime-local"
                     name="end"
-                    value={formData.end}
+                    value={moment(formData.end).format(
+                      "YYYY-MM-DDTHH:mm:ss"
+                    )}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>

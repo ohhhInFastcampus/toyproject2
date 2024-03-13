@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const PageContainer = styled.div`
   min-height: 100vh;
+  width: 100%;
   background-color: ${theme.colors.lightGrey};
   padding: 3rem;
 `;
@@ -17,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <PageContainer>
         <div>{children}</div>
       </PageContainer>
-      <Footer currentYear={2017} />
+      <Footer currentYear={2024} />
     </>
   );
 }
