@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <PageContainer>
         <div>{children}</div>
       </PageContainer>
-      <Footer currentYear={2017} />
+      <Footer currentYear={2024} />
     </>
   );
 }
