@@ -10,8 +10,8 @@ export const CalendarContainer = styled.div`
 
   .fc-toolbar {
     display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: space-between; /* Distribute space evenly between items */
+    align-items: center; 
+    justify-content: space-between; 
 
     button {
       background-color: #f0f0f0;
@@ -22,7 +22,7 @@ export const CalendarContainer = styled.div`
       margin: 0 4px;
       cursor: pointer;
       display: flex-row;
-      align-items: center; /* Center the icon vertically */
+      align-items: center; 
     }
     button:hover {
       background-color: #e0e0e0;
@@ -30,7 +30,7 @@ export const CalendarContainer = styled.div`
   }
 
   .fc-today-button {
-    font-size: 12px; /* Adjust font size to make the text smaller */
+    font-size: 12px; 
   }
 
   .fc-prev-button,

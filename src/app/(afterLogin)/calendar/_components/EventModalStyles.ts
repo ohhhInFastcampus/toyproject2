@@ -94,20 +94,20 @@ export const DateInput = styled.input`
   width: 128px;
   font-size: 13px;
   border: none;
-  border-bottom: 1px solid transparent; /* Remove border */
-  background-color: transparent; /* Remove background color */
+  border-bottom: 1px solid transparent; 
+  background-color: transparent; 
 `;
 
 
 export const TextArea = styled.textarea`
   padding: 10px 8px;
-  border: 1px solid transparent; /* Remove border */
+  border: 1px solid transparent; 
   border-radius: 4px;
   width: 100%;
   font-size: 13px;
   margin-left: 15px;
   margin-right: 15px;
-  background-color: transparent; /* Remove background color */
+  background-color: transparent; 
   &:focus {
     outline: none;
     border: 1px solid #333;
@@ -183,12 +183,12 @@ export const Text = styled.span`
 
 export const Title = styled.h2`
   padding: 10px 8px;
-  font-size: 22px; /* Keep the font size consistent */
+  font-size: 22px; 
   width: 100%; 
   margin-left: 10px;
   margin-right: 15px;
-  border-bottom: 1px solid transparent; /* Remove border */
-  background-color: transparent; /* Remove background color */
+  border-bottom: 1px solid transparent; 
+  background-color: transparent; 
   &:hover {
     color: #333;
   }
