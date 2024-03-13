@@ -10,7 +10,7 @@ import {
 import { auth } from "@/firebase";
 // import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { login } from "@/slice/slice";
+import { login, setLoadingState } from "@/slice/slice";
 import { useRouter } from "next/navigation";
 import fetchImgFromFireStorage from "@/utils/getUserImage";
 
@@ -43,6 +43,7 @@ const LoginPage = () => {
     try {
       //firebase 인증
       // setPersistence(auth, browserSessionPersistence); //세션설정
+      dispatch(setLoadingState({ isLoading: true }));
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       const token = await user.getIdToken();
 
@@ -63,12 +64,14 @@ const LoginPage = () => {
       };
       dispatch(login(authConstructor));
       setUser(user);
+      router.push("/");
     } catch (error) {
       setError("아이디 또는 비밀번호가 다릅니다.");
     }
     if (formRef.current) {
       formRef.current.reset();
     }
+    dispatch(setLoadingState({ isLoading: false }));
   };
 
   useEffect(() => {
