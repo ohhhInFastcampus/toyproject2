@@ -23,7 +23,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { ScheduleType } from "@/type/Schedule";
-import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
+import { v4 as uuidv4 } from "uuid"; 
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
@@ -32,13 +32,13 @@ interface Props {
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
   userId: string;
-  id: string; // Change the id type to string
+  id: string; 
 }
 
 const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
   const [formData, setFormData] = useState<ScheduleType>({
     userId: userId,
-    id: id || uuidv4(), // Use the provided id or generate UUID id || uuidv4()
+    id: id || uuidv4(), 
     title: "",
     start: moment().format("YYYY-MM-DDTHH:mm:ss"),
     end: moment().format("YYYY-MM-DDTHH:mm:ss"),
@@ -49,7 +49,6 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     borderColor: "#DEDEDE",
   });
 
-  // Updates the form data when input fields change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -60,7 +59,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     }));
   };
 
-  // Handles form submission
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
@@ -79,19 +78,17 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     };
   
     try {
-      // If formData.id exists, update the existing document
       if (formData.id) {
         const docRef = doc(db, "schedule", formData.id);
-        await setDoc(docRef, updatedFormData); // Use setDoc for updating
+        await setDoc(docRef, updatedFormData); 
         console.log("Updated event with ID:", formData.id);
-        onSubmit(updatedFormData); // Call onSubmit with updated form data
-        onClose(); // Close the modal
+        onSubmit(updatedFormData); 
+        onClose(); 
       } else {
         console.error("No ID found for event:", formData);
       }
     } catch (error) {
       console.error("Error updating event:", error);
-      // Handle error, maybe display a message to the user
     }
   };
 

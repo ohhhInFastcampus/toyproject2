@@ -14,8 +14,8 @@ const PayPageStyle = styled.div`
   min-height: 100vh;
   background-color: ${theme.colors.white};
   border-radius: ${theme.border.radius};
-  margin-left: auto; /* Center horizontally */
-  margin-right: 100px; /* Center horizontally */
+  margin-left: auto; 
+  margin-right: 100px; 
 `;
 
 const Title = styled.div`

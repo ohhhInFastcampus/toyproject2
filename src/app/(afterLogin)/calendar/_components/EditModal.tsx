@@ -11,7 +11,6 @@ import {
   DateInput,
   TextArea,
   SubmitButton,
-  eventColors,
   DateInputWrapper,
   DeleteButton,
   ButtonContainer,
@@ -79,7 +78,6 @@ const EditModal = ({
     });
   }, [event, userId]);
 
-  // Updates the form data when input fields change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -98,11 +96,9 @@ const EditModal = ({
     console.log(formData);
   };
 
-  // Handles form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Convert start and end to formatted strings if changed, otherwise keep as is
     const updatedFormData = {
       ...formData,
       textColor: formData.textColor || "black",
@@ -129,7 +125,6 @@ const EditModal = ({
     }
   };
     
-  // Handle event deletion
   const handleDelete = async () => {
     try {
       if (formData.id) {
@@ -224,12 +219,10 @@ const EditModal = ({
                   <SubmitButton type="submit">저장</SubmitButton>
                 ) : (
                   <EditButton type="button" onClick={handleEdit}>
-                    {/* <FontAwesomeIcon icon={faEdit} /> */}
                     수정
                   </EditButton>
                 )}
                 <DeleteButton type="button" onClick={handleDelete}>
-                  {/* <FontAwesomeIcon icon={faTrash} /> */}
                   삭제
                 </DeleteButton>
               </ButtonContainer>

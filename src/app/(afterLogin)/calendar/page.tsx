@@ -16,7 +16,7 @@ import { collection,getDocs,
 } from "firebase/firestore";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
+import { v4 as uuidv4 } from "uuid"; 
 
 const Calendar = () => {
   const email = useSelector((state: RootState) => state.auth.email);
@@ -26,7 +26,7 @@ const Calendar = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [newEvent, setNewEvent] = useState<ScheduleType>({
     userId: userId,
-    id: "", // Initial value is empty
+    id: "", 
     title: "",
     start: "",
     end: "",
@@ -46,7 +46,7 @@ const Calendar = () => {
         const fetchedEvents: ScheduleType[] = [];
         querySnapshot.forEach((doc) => {
           const event = doc.data() as ScheduleType;
-          // Convert start and end strings to Date objects
+          // Convert start and end strings to Date objects (FullCalendar)
           event.start = moment(event.start).format("YYYY-MM-DDTHH:mm:ss");
           event.end = moment(event.end).format("YYYY-MM-DDTHH:mm:ss");
           fetchedEvents.push(event);
@@ -67,23 +67,23 @@ const Calendar = () => {
     const clickedDate = moment(arg.date).format("YYYY-MM-DDTHH:mm:ss");
     const newEvent: ScheduleType = {
       userId: userId,
-      id: "", // Generate UUID uuidv4()
+      id: "", 
       title: "",
-      start: clickedDate, // Use the clicked date as a string
-      end: clickedDate, // Use the same clicked date for start and end as string
+      start: clickedDate, 
+      end: clickedDate, 
       content: "",
       participant: "",
       backgroundColor: "",
       textColor: "black",
       borderColor: "#DEDEDE",
     };
-    setNewEvent(newEvent); // Set the newEvent state for EventModal
+    setNewEvent(newEvent); 
     setShowModal(true);
   }
 
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
-      ...newEvent, // Use the same newEvent state
+      ...newEvent, 
       start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
@@ -94,7 +94,7 @@ const Calendar = () => {
     setShowModal(false);
     setNewEvent({
       userId: userId,
-      id: "", // Reset id for the next new event
+      id: "", 
       title: "",
       start: "",
       end: "",
@@ -145,7 +145,7 @@ const Calendar = () => {
     setShowModal(false);
     setNewEvent({
       userId: userId,
-      id: "", // Reset id when closing modal
+      id: "", 
       title: "",
       start: "",
       end: "",
@@ -163,7 +163,7 @@ const Calendar = () => {
 
     const event: ScheduleType = {
       ...formData,
-      id: formData.id || uuidv4(), // Generate UUID if ID doesn't exist
+      id: formData.id || uuidv4(), 
       start: start,
       end: end,
       textColor: "black",
