@@ -6,6 +6,7 @@ import {
   Form,
   FormGroup,
   IconWrapper,
+  InputWrapper,
   TitleInput,
   Input,
   DateInput,
@@ -19,6 +20,7 @@ import {
   faClock,
   faUsers,
   faNoteSticky,
+  faChevronRight,
   faCalendarCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
@@ -26,30 +28,30 @@ import { ScheduleType } from "@/type/Schedule";
 import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: ScheduleType) => void;
-  userId: string;
-  id: string; // Change the id type to string
+  newEvent: ScheduleType;
 }
 
-const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
+const EventModal = ({ isOpen, onClose, onSubmit, newEvent }: Props) => {
+  const email = useSelector((state: RootState) => state.auth.email);
   const [formData, setFormData] = useState<ScheduleType>({
     userId: userId,
     id: id || uuidv4(), // Use the provided id or generate UUID id || uuidv4()
     title: "",
-    start: moment().format("YYYY-MM-DDTHH:mm:ss"),
-    end: moment().format("YYYY-MM-DDTHH:mm:ss"),
+    start: moment().format("YYYY-MM-DD"), // 오늘 날짜로 초기화
+    end: moment().format("YYYY-MM-DD"),
     content: "",
     participant: "",
     backgroundColor: "",
-    textColor: "black",
-    borderColor: "#DEDEDE",
   });
 
-  // Updates the form data when input fields change
+  // 입력 값 변경 처리
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -60,10 +62,9 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
     }));
   };
 
-  // Handles form submission
+  // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
     const randomIndex = Math.floor(Math.random() * eventColors.length);
     const randomColor = eventColors[randomIndex];
     const start = new Date(formData.start);
@@ -77,6 +78,7 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
       textColor: "black",
       borderColor: "#DEDEDE",
     };
+
   
     try {
       // If formData.id exists, update the existing document
@@ -94,7 +96,6 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
       // Handle error, maybe display a message to the user
     }
   };
-
 
   return (
     <>
@@ -121,22 +122,18 @@ const EventModal = ({ isOpen, onClose, onSubmit, userId, id }: Props) => {
                 </IconWrapper>
                 <DateInputWrapper>
                   <DateInput
-                    type="datetime-local"
+                    type="date"
                     name="start"
-                    value={moment(formData.start).format(
-                      "YYYY-MM-DDTHH:mm:ss"
-                    )}
+                    value={formData.start}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>
                 -
                 <DateInputWrapper>
                   <DateInput
-                    type="datetime-local"
+                    type="date"
                     name="end"
-                    value={moment(formData.end).format(
-                      "YYYY-MM-DDTHH:mm:ss"
-                    )}
+                    value={formData.end}
                     onChange={handleChange}
                   />
                 </DateInputWrapper>

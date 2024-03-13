@@ -1,6 +1,6 @@
 export interface ScheduleType {
     userId: string,
-    id?: string,
+    id: string,
     title: string,
     start: string,
     end: string,

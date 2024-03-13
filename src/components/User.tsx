@@ -5,43 +5,36 @@ import { UserType } from "../type/UserType";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import theme from "@/styles/theme";
 
 const UserContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: #f0f0f0;
-  height: 40px;
-  padding: 0 15px;
-  border-radius: 10px;
+  background-color: ${theme.colors.white};
+  border-radius: 100%;
+  gap: 1rem;
+  padding: 5px;
 `;
-
-const UserName = styled.div`
-  margin-left: 10px;
-  font-size: 15px;
-`;
-
-interface UserProps extends UserType {
-  onClick: () => void;
-}
-
-const User = ({ onClick }: UserProps) => {
+const User = () => {
   const [clientPhotoURL, setClientPhotoURL] = useState<string | null>(null);
   const photoURL = useSelector((state: RootState) => state.auth.photoURL);
-  const name = useSelector((state: RootState) => state.auth.name);
-  console.log("User name:", name);
 
   useEffect(() => {
-    setClientPhotoURL(photoURL);
+    // FIXME: `photoURL`이 "null"인 경우가 있음
+    if (photoURL && photoURL !== "null") {
+      setClientPhotoURL(photoURL);
+    }
   }, [photoURL]);
 
   return (
-    <UserContainer onClick={onClick}>
-      {clientPhotoURL && (
-        <Image src={clientPhotoURL} alt="user profile" width={50} height={50} />
-      )}
-      <UserName>{name}</UserName>
+    <UserContainer>
+      <Image
+        src={clientPhotoURL ?? "/xmark.svg"}
+        alt="user profile"
+        width={25}
+        height={25}
+      />
     </UserContainer>
   );
 };
-
 export default User;

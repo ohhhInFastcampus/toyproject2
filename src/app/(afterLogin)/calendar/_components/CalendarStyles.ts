@@ -12,6 +12,7 @@ export const CalendarContainer = styled.div`
     display: flex;
     align-items: center; /* Align items vertically */
     justify-content: space-between; /* Distribute space evenly between items */
+
     button {
       background-color: #f0f0f0;
       color: #333;
@@ -34,14 +35,10 @@ export const CalendarContainer = styled.div`
 
   .fc-prev-button,
   .fc-next-button {
-    font-size: 10px; 
-  }
-  .fc-dayGridMonth-button,
-  .fc-timeGridWeek-button {
-    font-size: 12px;
+    font-size: 10px;
   }
 
-.fc-event-time {
-  display: none;
-}
+  .fc-event-time {
+    display: none;
+  }
 `;

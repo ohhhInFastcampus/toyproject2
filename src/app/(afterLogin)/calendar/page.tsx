@@ -14,34 +14,27 @@ import EditModal from "./_components/EditModal";
 import { db } from "@/firebase";
 import { collection,getDocs,
 } from "firebase/firestore";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid"; // Import uuidv4 function from uuid
 
 const Calendar = () => {
-  const email = useSelector((state: RootState) => state.auth.email);
-  const [userId, setUserId] = useState<string>(email ?? "");
   const [events, setEvents] = useState<ScheduleType[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newEvent, setNewEvent] = useState<ScheduleType>({
-    userId: userId,
-    id: "", // Initial value is empty
+    userId: "",
+    id: "",
     title: "",
     start: "",
     end: "",
     content: "",
     participant: "",
     backgroundColor: "",
-    textColor: "black",
-    borderColor: "#DEDEDE",
   });
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const eventsCollectionRef = collection(db, "schedule");
-        const querySnapshot = await getDocs(eventsCollectionRef);
+        const eventsCollectionRef = collection(db, "schedule"); // "schedule" 컬렉션에 대한 참조
+        const querySnapshot = await getDocs(eventsCollectionRef); // 컬렉션에서 문서 가져오기
 
         const fetchedEvents: ScheduleType[] = [];
         querySnapshot.forEach((doc) => {
@@ -66,49 +59,46 @@ const Calendar = () => {
   function handleDateClick(arg: { date: Date }) {
     const clickedDate = moment(arg.date).format("YYYY-MM-DDTHH:mm:ss");
     const newEvent: ScheduleType = {
-      userId: userId,
-      id: "", // Generate UUID uuidv4()
+      userId: "",
+      id: "",
       title: "",
       start: clickedDate, // Use the clicked date as a string
       end: clickedDate, // Use the same clicked date for start and end as string
       content: "",
       participant: "",
       backgroundColor: "",
-      textColor: "black",
-      borderColor: "#DEDEDE",
     };
-    setNewEvent(newEvent); // Set the newEvent state for EventModal
+    setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowModal(true);
   }
 
   function addEvent(data: DropArg) {
     const event: ScheduleType = {
-      ...newEvent, // Use the same newEvent state
+      ...newEvent,
       start: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       end: moment(data.date).format("YYYY-MM-DDTHH:mm:ss"),
       title: data.draggedEl.title,
       textColor: "black",
       borderColor: "#DEDEDE",
+
     };
     setEvents([...events, event]);
     setShowModal(false);
     setNewEvent({
-      userId: userId,
-      id: "", // Reset id for the next new event
+      userId: "",
+      id: "",
       title: "",
       start: "",
       end: "",
       content: "",
       participant: "",
       backgroundColor: "",
-      textColor: "black",
-      borderColor: "#DEDEDE",
     });
   }
 
   function handleEditModal(clickedEvent: any) {
     const event: ScheduleType = {
-      userId: userId,
+      userId: "",
       id: clickedEvent.event.id,
       title: clickedEvent.event.title,
       start: clickedEvent.event.start,
@@ -130,30 +120,31 @@ const Calendar = () => {
   }
 
   function handleEditEvent(formData: ScheduleType) {
+    // Find the index of the edited event in the events array
     const index = events.findIndex((event) => event.id === formData.id);
 
     if (index !== -1) {
+      // Update the events array with the edited event data
       const updatedEvents = [...events];
       updatedEvents[index] = formData;
       setEvents(updatedEvents);
     }
 
+    // Close the EditModal
     setShowEditModal(false);
   }
 
   function handleCloseModal() {
     setShowModal(false);
     setNewEvent({
-      userId: userId,
-      id: "", // Reset id when closing modal
+      userId: "",
+      id: "",
       title: "",
       start: "",
       end: "",
       content: "",
       participant: "",
       backgroundColor: "",
-      textColor: "black",
-      borderColor: "#DEDEDE",
     });
   }
 
@@ -197,9 +188,8 @@ const Calendar = () => {
         {showModal && (
           <EventModal
             onClose={handleCloseModal}
-            onSubmit={(newEvent) => handleFormSubmit(newEvent)}
-            userId={userId}
-            id={newEvent.id || ""}
+            onSubmit={handleFormSubmit}
+            newEvent={newEvent}
             isOpen={showModal}
           />
         )}
@@ -207,8 +197,6 @@ const Calendar = () => {
           <EditModal
             isOpen={showEditModal}
             event={newEvent}
-            userId={userId}
-            id={newEvent.id || ""}
             onClose={() => setShowEditModal(false)}
             onDelete={handleDeleteEvent}
             onSubmit={handleEditEvent}

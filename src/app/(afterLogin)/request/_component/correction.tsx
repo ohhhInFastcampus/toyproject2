@@ -75,7 +75,7 @@ const Correction = () => {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <StyledRequest>
         <h2>정정 신청 페이지</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} suppressHydrationWarning>
           <div>
             <label htmlFor="month">급여 내역</label>
             <StyledSelect id="month" name="month" onChange={handleChange}>

@@ -50,6 +50,7 @@ const authSlice = createSlice({
     uid: decodedUserToken?.uid ?? null,
     photoURL: userPhotoURL ?? null,
     token: userToken,
+    isLoading: false,
   } as AuthState,
   reducers: {
     login: (state, action) => {
@@ -74,9 +75,12 @@ const authSlice = createSlice({
       document.cookie =
         "photoURL=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     },
+    setLoadingState: (state, action) => {
+      state.isLoading = action.payload.isLoading;
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setLoadingState } = authSlice.actions;
 
 export default authSlice.reducer;
