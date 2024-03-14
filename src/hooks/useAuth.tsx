@@ -13,10 +13,8 @@ const useAuth = () => {
   const segments = useSelectedLayoutSegment();
 
   useEffect(() => {
+    dispatch(setLoadingState({ isLoading: true }));
     (async () => {
-      if (!(segments == "login")) {
-        dispatch(setLoadingState({ isLoading: true }));
-      }
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
           // 사용자가 인증되지 않았을 경우
@@ -35,12 +33,9 @@ const useAuth = () => {
             token: token,
             photoURL: userPhotoURL,
           };
-
           dispatch(login(authConstructor));
-
           setIsAuthenticated(true);
         }
-        await setTimeout(() => {}, 5000);
 
         dispatch(setLoadingState({ isLoading: false }));
       });

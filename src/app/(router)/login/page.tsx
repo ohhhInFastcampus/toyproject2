@@ -1,14 +1,9 @@
 "use client";
 import React, { FormEventHandler, useEffect, useRef, useState } from "react";
-import LoginForm from "../../components/LoginForm";
+import LoginForm from "../../../components/LoginForm";
 import styled from "styled-components";
-import {
-  User,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase";
-// import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { login, setLoadingState } from "@/slice/slice";
 import { useRouter } from "next/navigation";
@@ -62,24 +57,23 @@ const LoginPage = () => {
         photoURL: PhotoURL,
         token: token,
       };
+      router.replace("/");
       dispatch(login(authConstructor));
       setUser(user);
-      router.push("/");
     } catch (error) {
       setError("아이디 또는 비밀번호가 다릅니다.");
     }
     if (formRef.current) {
       formRef.current.reset();
     }
-    dispatch(setLoadingState({ isLoading: false }));
   };
 
   useEffect(() => {
     if (user) {
-      router.push("/");
+      dispatch(setLoadingState({ isLoading: true }));
+      router.replace("/");
     }
-  }, [user, router]);
-
+  }, [user, router, dispatch]);
   return (
     <StyledContainer>
       <LoginForm error={error} onSubmit={formAction} formRef={formRef} />
