@@ -33,36 +33,37 @@ const CardContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
 `;
 
 const ContentLabel = styled.div`
   font-weight: bold;
-  font-size: 1rem; 
-  color: #333; 
+  font-size: 1rem;
+  color: #333;
 `;
 
 const ContentValue = styled.div`
-  font-size: 1rem; 
+  font-size: 1rem;
 `;
 
 const ButtonWrap = styled.div`
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
 `;
 
 const StyledButton = styled(Button)`
-  background-color: #f2f2f2; 
-  color: #333; 
-  border: 1px solid #ccc; 
-  padding: 8px 16px; 
-  border-radius: 4px; 
+  background-color: #f2f2f2;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   &:hover {
-    background-color: #e0e0e0; 
-    color: #222; 
-    border-color: #bbb; 
+    background-color: #e0e0e0;
+    color: #222;
+    border-color: #bbb;
+  }
 `;
 
 interface CardProps {

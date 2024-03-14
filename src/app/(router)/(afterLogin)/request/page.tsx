@@ -6,7 +6,7 @@ import { RequestType } from "@/type/Request";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import Image from "next/image";
-import * as S from "@/app/(afterLogin)/request/requestStyle";
+import * as S from "@/app/(router)/(afterLogin)/request/requestStyle";
 
 const RequestPage = () => {
   const [requestModal, setRequestModal] = useState(false);
